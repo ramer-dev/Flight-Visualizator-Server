@@ -6,20 +6,18 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AppModule = void 0;
+exports.FileService = void 0;
 const common_1 = require("@nestjs/common");
-const app_controller_1 = require("./app.controller");
-const app_service_1 = require("./app.service");
-const flight_module_1 = require("./flight/flight.module");
-const file_module_1 = require("./file/file.module");
-let AppModule = class AppModule {
+let FileService = class FileService {
+    uploadFile(file) {
+        if (!file) {
+            throw new common_1.BadRequestException('파일이 존재하지 않습니다.');
+        }
+        return { filePath: file.path };
+    }
 };
-AppModule = __decorate([
-    (0, common_1.Module)({
-        imports: [flight_module_1.FlightModule, file_module_1.FileModule],
-        controllers: [app_controller_1.AppController],
-        providers: [app_service_1.AppService],
-    })
-], AppModule);
-exports.AppModule = AppModule;
-//# sourceMappingURL=app.module.js.map
+FileService = __decorate([
+    (0, common_1.Injectable)()
+], FileService);
+exports.FileService = FileService;
+//# sourceMappingURL=file.service.js.map

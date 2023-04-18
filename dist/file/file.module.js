@@ -6,20 +6,24 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AppModule = void 0;
+exports.FileModule = void 0;
 const common_1 = require("@nestjs/common");
-const app_controller_1 = require("./app.controller");
-const app_service_1 = require("./app.service");
-const flight_module_1 = require("./flight/flight.module");
-const file_module_1 = require("./file/file.module");
-let AppModule = class AppModule {
+const platform_express_1 = require("@nestjs/platform-express");
+const multer_options_factory_1 = require("../common/utils/multer.options.factory");
+const file_controller_1 = require("./file.controller");
+const file_service_1 = require("./file.service");
+let FileModule = class FileModule {
 };
-AppModule = __decorate([
+FileModule = __decorate([
     (0, common_1.Module)({
-        imports: [flight_module_1.FlightModule, file_module_1.FileModule],
-        controllers: [app_controller_1.AppController],
-        providers: [app_service_1.AppService],
+        imports: [
+            platform_express_1.MulterModule.registerAsync({
+                useFactory: multer_options_factory_1.multerOptionsFactory,
+            }),
+        ],
+        controllers: [file_controller_1.FileController],
+        providers: [file_service_1.FileService],
     })
-], AppModule);
-exports.AppModule = AppModule;
-//# sourceMappingURL=app.module.js.map
+], FileModule);
+exports.FileModule = FileModule;
+//# sourceMappingURL=file.module.js.map
