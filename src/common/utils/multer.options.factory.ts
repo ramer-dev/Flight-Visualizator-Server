@@ -13,14 +13,13 @@ const mkdir = (directory: string) => {
         logger.log(
             `지정한 경로에 ${directory}가 존재하지 않아 ${directory}를 생성합니다.`,
         );
-        logger.log(process.cwd(), directory)
         fs.mkdirSync(path.join(process.cwd(), directory));
     }
 };
 
 mkdir('uploads');
 
-export const multerOptionsFactory = (): MulterOptions => {
+export const multerOptionsFactory = (folder:string): MulterOptions => {
     return {
         storage: multer.diskStorage({
             destination(req, file, done) { // 파일을 저장할 위치를 설정합니다

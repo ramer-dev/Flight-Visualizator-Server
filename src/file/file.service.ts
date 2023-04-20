@@ -1,10 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import fs from 'fs'
 
 @Injectable()
 export class FileService {
     uploadFile(file: Express.Multer.File) {
         if (!file) {
-            throw new BadRequestException('파일이 존재하지 않습니다.');
+            throw new BadRequestException('파일이 존재하지 않습니다..');
         }
 
         return { filePath: file.path };
