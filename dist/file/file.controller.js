@@ -16,6 +16,7 @@ exports.FileController = void 0;
 const common_1 = require("@nestjs/common");
 const platform_express_1 = require("@nestjs/platform-express");
 const file_service_1 = require("./file.service");
+const swagger_1 = require("@nestjs/swagger");
 let FileController = class FileController {
     constructor(fileService) {
         this.fileService = fileService;
@@ -26,6 +27,7 @@ let FileController = class FileController {
 };
 __decorate([
     (0, common_1.Post)('upload'),
+    (0, swagger_1.ApiOperation)({ summary: '파일 업로드 API', description: "파일을 업로드한다." }),
     (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file')),
     __param(0, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
@@ -34,6 +36,7 @@ __decorate([
 ], FileController.prototype, "uploadFile", null);
 FileController = __decorate([
     (0, common_1.Controller)('file'),
+    (0, swagger_1.ApiTags)('파일 업로드 API'),
     __metadata("design:paramtypes", [file_service_1.FileService])
 ], FileController);
 exports.FileController = FileController;

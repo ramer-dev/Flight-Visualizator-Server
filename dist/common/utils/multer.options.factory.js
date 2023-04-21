@@ -15,12 +15,11 @@ const mkdir = (directory) => {
     }
     catch (err) {
         logger.log(`지정한 경로에 ${directory}가 존재하지 않아 ${directory}를 생성합니다.`);
-        logger.log(process.cwd(), directory);
         fs_1.default.mkdirSync(path_1.default.join(process.cwd(), directory));
     }
 };
 mkdir('uploads');
-const multerOptionsFactory = () => {
+const multerOptionsFactory = (folder) => {
     return {
         storage: multer_1.default.diskStorage({
             destination(req, file, done) {

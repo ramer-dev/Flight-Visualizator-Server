@@ -1,2 +1,2 @@
 import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
-export declare const multerOptionsFactory: () => MulterOptions;
+export declare const multerOptionsFactory: (folder: string) => MulterOptions;

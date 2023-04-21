@@ -11,7 +11,7 @@ const common_1 = require("@nestjs/common");
 let FileService = class FileService {
     uploadFile(file) {
         if (!file) {
-            throw new common_1.BadRequestException('파일이 존재하지 않습니다.');
+            throw new common_1.BadRequestException('파일이 존재하지 않습니다..');
         }
         return { filePath: file.path };
     }
