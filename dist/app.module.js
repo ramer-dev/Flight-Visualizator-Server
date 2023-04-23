@@ -10,13 +10,14 @@ exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
-const flight_module_1 = require("./flight/flight.module");
+const db_options_1 = require("./common/utils/db.options");
 const file_module_1 = require("./file/file.module");
+const flight_module_1 = require("./flight/flight.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [flight_module_1.FlightModule, file_module_1.FileModule],
+        imports: [flight_module_1.FlightModule, file_module_1.FileModule, db_options_1.DBModule],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
     })
