@@ -1,21 +1,23 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { FlightTestList } from 'entities/list.entity';
+import { FlightList } from 'entities/list.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class ListService {
     constructor(
-        @InjectRepository(FlightTestList)
-        private readonly listRepository: Repository<FlightTestList>,
+        @InjectRepository(FlightList)
+        private readonly listRepository: Repository<FlightList>,
     ) { }
 
-    async getAllList(): Promise<FlightTestList[]> {
+    async getAllList(): Promise<FlightList[]> {
         const log = new Logger('List');
-        const q = await this.listRepository.createQueryBuilder('flight_test_list')
-        const sql = q.getQueryAndParameters();
-        console.log(sql);
         const res = await this.listRepository.find();
+        return res;
+    }
+
+    async getListItem(id:string): Promise<FlightList> {
+        const res = await this.listRepository.findOne({where:{TestName:id}})
         return res;
     }
 }

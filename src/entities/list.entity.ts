@@ -1,8 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, PrimaryColumn, Column } from 'typeorm';
+import { Entity, PrimaryColumn, Column } from 'typeorm';
 
 @Entity()
-export class FlightTestList {
-    @PrimaryGeneratedColumn()
+export class FlightList {
+    @PrimaryColumn()
     TestName: string;
     @Column()
     TestDate: string;
