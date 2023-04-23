@@ -17,6 +17,7 @@ export class ListController {
 
     @Get(':id')
     @UseGuards(JwtAuthGuard)
+    @ApiOperation({summary:'비행검사 아이템 조회', description: '전체 비행검사 목록 중 하나를 조회합니다.'})
     getListItem(@Param('id') id: string) {
         return this.listService.getListItem(id);
     }
