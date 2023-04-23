@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MulterModule } from '@nestjs/platform-express';
-import { multerOptionsFactory } from 'src/common/utils/multer.options.factory';
+import { multerOptionsFactory } from 'common/utils/multer.options.factory';
 import { FileController } from './file.controller';
 import { FileService } from './file.service';
 
