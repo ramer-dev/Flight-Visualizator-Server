@@ -16,9 +16,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload: Payload) {
     const user = payload.sub === '0'
-    console.log(payload)
     if (user) {
-      return user; // request.user에 해당 내용을 넣어준다 (Passport 라이브러리가 해줌)
+      return payload; // request.user에 해당 내용을 넣어준다 (Passport 라이브러리가 해줌)
     } else {
       throw new UnauthorizedException('접근 오류');
     }

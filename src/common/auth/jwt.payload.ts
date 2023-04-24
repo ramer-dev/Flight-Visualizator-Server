@@ -1,5 +1,5 @@
 export type Payload = {
-    email: string;
+    id: string;
     authority:number;
     sub: string;
   };
