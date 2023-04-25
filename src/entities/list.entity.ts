@@ -1,15 +1,14 @@
 import { Entity, PrimaryColumn, Column } from 'typeorm';
 
 @Entity()
-export class FlightList {
+export class RefreshToken {
     @PrimaryColumn()
-    TestName: string;
+    id: string;
     @Column()
-    TestDate: string;
+    pw: string;
     @Column()
-    TestType: string;
-    @Column( )
-    TestRoute: string;
-    @Column()
-    TestRouteFile: string;
+    role: number;
+    @Column({nullable:true})
+    @Exclude()
+    currentHashedRefreshToken? : string;
 } 

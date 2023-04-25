@@ -1,8 +1,8 @@
 import { Controller, Get, Param, UseGuards } from "@nestjs/common";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
-import { JwtAuthGuard } from "common/auth/jwt.guard";
-import { Roles } from "common/auth/role.decorator";
-import { RolesGuard } from "common/auth/role.guard";
+import { JwtAuthGuard } from "auth/guards/jwt.guard";
+import { Roles } from "auth/role.decorator";
+import { RolesGuard } from "auth/guards/role.guard";
 import { ListService } from "./list.service";
 
 @Controller('flight/list')

@@ -1,8 +1,9 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'entities/account.entity';
+import { User } from 'entities/user.entity';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
+import { Payload } from 'auth/jwt.payload';
 
 @Injectable()
 export class LoginService {
@@ -14,10 +15,10 @@ export class LoginService {
 
     async login(id_: string, pw_: string) {
         const log = new Logger('LoginService')
-        const { id, pw, authority } = await this.accountRepository.findOne({ where: { id: id_ } })
+        const { id, pw, role, currentHashedRefreshToken } = await this.accountRepository.findOne({ where: { id: id_ } })
         if (id === id_ && pw === pw_) {
             log.log(`${id} has logged in.`)
-            const payload = { id, role: authority, sub: '0' };
+            const payload = { id, role, sub: '0' };
             return this.jwtService.sign(payload);
         }
         log.log(`401 Error Thrown. id:${id_}| pw:${pw_}`)

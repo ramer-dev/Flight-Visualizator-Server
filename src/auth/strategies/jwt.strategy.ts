@@ -1,10 +1,11 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { Payload } from './jwt.payload';	// 다음에서 곧장 생성할 예정
+import { Payload } from '../jwt.payload';	// 다음에서 곧장 생성할 예정
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
+  
   constructor() {
     super({
       // 헤더 Authentication 에서 Bearer 토큰으로부터 jwt를 추출하겠다는 의미

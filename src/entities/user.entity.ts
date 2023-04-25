@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { Entity, PrimaryColumn, Column } from 'typeorm';
 
 @Entity()
@@ -7,5 +8,8 @@ export class User {
     @Column()
     pw: string;
     @Column()
-    authority: number;
+    role: number;
+    @Column({nullable:true})
+    @Exclude()
+    currentHashedRefreshToken? : string;
 } 
