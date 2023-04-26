@@ -12,6 +12,8 @@ export function setupSwagger(app: INestApplication): void {
     .setVersion('2.0.0')
     .build();
 
+
+
     const document = SwaggerModule.createDocument(app, options);
 
     SwaggerModule.setup('swagger', app, document);
