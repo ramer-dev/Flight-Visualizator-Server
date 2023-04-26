@@ -1,4 +1,5 @@
-import { Entity, PrimaryColumn, Column } from 'typeorm';
+import { Entity, PrimaryColumn, Column, OneToMany, JoinColumn, ManyToOne, JoinTable } from 'typeorm';
+import { FlightResult } from './result.entity';
 
 @Entity()
 export class FlightList {
@@ -8,8 +9,6 @@ export class FlightList {
     TestDate: string;
     @Column()
     TestType: string;
-    @Column( )
-    TestRoute: string;
     @Column()
-    TestRouteFile: string;
+    TestRoute: string;
 } 
