@@ -7,5 +7,5 @@ export class User {
     @Column()
     pw: string;
     @Column()
-    authority: number;
+    role: number;
 } 

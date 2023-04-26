@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from 'entities/account.entity';
+import { User } from 'entities/user.entity';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DBModule } from './common/utils/db.options';
@@ -16,10 +16,6 @@ import { UserController } from './user/user.controller';
     [User]
   ),
   PassportModule.register({ defaultStrategy: 'jwt', session: false }),
-  JwtModule.register({
-    secret: 'c0mtr2',
-    signOptions: { expiresIn: '1y' }
-  }), 
   
   FlightModule, FileModule, DBModule, LoginModule],
   controllers: [AppController, UserController],
