@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { FlightList } from 'entities/list.entity';
+import { FlightList } from 'entities/flightList.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -19,7 +19,7 @@ export class ListService {
 
     async getListItem(id:string): Promise<FlightList> {
         const log = new Logger('FlightList');
-        const res = await this.listRepository.findOne({where:{TestName:id}})
+        const res = await this.listRepository.findOne({where:{testName:id}})
         log.log(`get one flight Lists: name:${id}`)
         return res;
     }

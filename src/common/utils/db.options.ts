@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies/snake-naming.strategy';
 
-@Module({
+  @Module({
     imports: [
         TypeOrmModule.forRoot({
             type: 'mysql',
@@ -13,6 +14,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
             entities: ['entities/**/*.entity{.ts,.js}'],
             // synchronize: true,
             autoLoadEntities:true,
+            namingStrategy: new SnakeNamingStrategy()
         }),
     ]
 })

@@ -11,8 +11,8 @@ export class ListController {
     constructor(private readonly listService: ListService) { }
 
     @Get()
-    @Roles(1)
-    @UseGuards(JwtAuthGuard, RolesGuard)
+    // @Roles(1)
+    // @UseGuards(JwtAuthGuard, RolesGuard)
     @ApiOperation({ summary: '전체 목록 조회', description: '전체 목록 조회' })
     getAllList() {
         return this.listService.getAllList();
