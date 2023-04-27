@@ -1,7 +1,7 @@
 import { Entity, PrimaryColumn, Column} from 'typeorm';
 
 @Entity()
-export class FlightList {
+export class Area {
     @PrimaryColumn()
     sectorNum: number;
     @Column()

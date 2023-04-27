@@ -1,7 +1,7 @@
 import { Entity, PrimaryColumn, Column, Polygon } from 'typeorm';
 
 @Entity()
-export class SectorEntity {
+export class Sector {
     @PrimaryColumn()
     sectorName: string;
     @Column()

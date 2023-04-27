@@ -1,7 +1,7 @@
 import { Entity, PrimaryColumn, Column, Point } from 'typeorm';
 
 @Entity()
-export class SiteEntity {
+export class Site {
     @PrimaryColumn()
     siteName : string;
     @Column()

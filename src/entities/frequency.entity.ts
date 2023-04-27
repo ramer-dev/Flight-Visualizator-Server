@@ -1,7 +1,7 @@
 import { Entity, PrimaryColumn, Column } from 'typeorm';
 
 @Entity()
-export class FrequencyEntity {
+export class Frequency {
     @PrimaryColumn()
     frequency: number;
     @PrimaryColumn()

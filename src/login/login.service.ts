@@ -1,14 +1,14 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from 'entities/user.entity';
+import { User } from 'entities/user.entity';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class LoginService {
     constructor(
-        @InjectRepository(UserEntity)
-        private readonly accountRepository: Repository<UserEntity>,
+        @InjectRepository(User)
+        private readonly accountRepository: Repository<User>,
         private jwtService: JwtService,
     ) { }
 
