@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseGuards } from "@nestjs/common";
+import { Controller, Get, Param, Patch, Post, UseGuards } from "@nestjs/common";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "common/auth/jwt.guard";
 import { Roles } from "common/auth/role.decorator";
@@ -18,12 +18,9 @@ export class ListController {
         return this.listService.getAllList();
     }
 
-    @Get(':id')
-    @Roles(1)
-    @UseGuards(JwtAuthGuard, RolesGuard)
-    @ApiOperation({summary:'비행검사 아이템 조회', description: '전체 비행검사 목록 중 하나를 조회합니다.'})
-    getListItem(@Param('id') id: string) {
-        return this.listService.getListItem(id);
+    @Post()
+    postFlightList(){
+        // this.listService.post
     }
 
 }

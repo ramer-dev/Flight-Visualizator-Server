@@ -10,7 +10,7 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies/snake-naming.stra
             port: 3306,
             username: 'root',
             password: 'root',
-            database: 'enroute',
+            database: 'backup',
             entities: ['entities/**/*.entity{.ts,.js}'],
             // synchronize: true,
             autoLoadEntities:true,

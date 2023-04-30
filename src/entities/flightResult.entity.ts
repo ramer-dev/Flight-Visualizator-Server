@@ -1,15 +1,17 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { isNumber } from 'class-validator';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { FlightList } from './flightList.entity';
 
 @Entity()
 export class FlightResult {
     @PrimaryGeneratedColumn()
     id: number;
     @Column()
-    sitename: string;
-    @Column()
+    siteName: string;
+    @Column("double", {precision:5,scale:3})
     frequency: number;
     @Column()
-    testname: string;
+    testName: string;
     @Column( )
     txmain: string;
     @Column()
@@ -21,7 +23,8 @@ export class FlightResult {
     @Column()
     angle: number;
     @Column()
-    distance: number;
+    distance: number; 
     @Column()
     height: number;
+
 } 
