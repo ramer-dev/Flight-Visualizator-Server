@@ -14,7 +14,8 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies/snake-naming.stra
             entities: ['entities/**/*.entity{.ts,.js}'],
             // synchronize: true,
             autoLoadEntities:true,
-            namingStrategy: new SnakeNamingStrategy()
+            namingStrategy: new SnakeNamingStrategy(),
+            logging:true
         }),
     ]
 })

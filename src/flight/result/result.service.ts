@@ -40,18 +40,18 @@ export class ResultService {
     async getSearchResult(body: SearchDto) {
         const { siteName, frequency, startDate, endDate, testName, score, angleStart, angleEnd, distanceStart, distanceEnd, heightStart, heightEnd } = body;
 
-        const where: any = {        };
+        const where: any = {};
 
-        if(testName){
-            where.testName = Like('%'+testName+'%');
+        if (testName) {
+            where.testName = Like('%' + testName + '%');
         }
 
-        if(frequency){
-            where.frequency = Like('%'+frequency+'%');
+        if (frequency) {
+            where.frequency = Like('%' + frequency + '%');
         }
 
-        if(siteName){
-            where.siteName = Like('%'+siteName+'%');
+        if (siteName) {
+            where.siteName = Like('%' + siteName + '%');
         }
 
         if (distanceStart && distanceEnd) {
@@ -65,19 +65,24 @@ export class ResultService {
         if (heightStart && heightEnd) {
             where.height = Between(heightStart, heightEnd);
         }
-        if (score) {
-            // where.txmain = Equal(() => `CAST(LEFT(txmain, 1) AS INTEGER) + CAST(RIGHT(txmain,1) AS INTEGER) >= ${score}`)
-            where.txmain = 'CAST(LEFT(txmain, 1) AS INTEGER) + CAST(RIGHT(txmain,1) AS INTEGER)'
-        }
+
+        // if (score) {
+        //     // where.txmain = Equal(() => `CAST(LEFT(txmain, 1) AS INTEGER) + CAST(RIGHT(txmain,1) AS INTEGER) >= ${score}`)
+        //     where.txmain = (qb) => {
+        //         qb.where(`CAST(SUBSTRING_INDEX(txmain, '/', 1) AS UNSIGNED) + CAST(SUBSTRING_INDEX(txmain, '/', -1) AS UNSIGNED) >= :score`, { score });
+        //     }
+        // }
 
 
         console.log(where);
-        const res = await this.resultRepository.find({ where });
+        const res = await this.resultRepository.find({ where});
 
 
-        // const res = await this.resultRepository.createQueryBuilder('flight_result').where(where).getQuery()
+        const res2 = await this.resultRepository.createQueryBuilder('flight_result').getOne()
+        // .innerJoin('flight_result.test_name', 'flight_list')
+        // .getMany()
 
-        console.log(res);
+        console.log(res2);
 
     }
 }
