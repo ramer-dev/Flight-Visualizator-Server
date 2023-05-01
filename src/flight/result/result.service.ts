@@ -75,17 +75,11 @@ export class ResultService {
         //         qb.where(`CAST(SUBSTRING_INDEX(txmain, '/', 1) AS UNSIGNED) + CAST(SUBSTRING_INDEX(txmain, '/', -1) AS UNSIGNED) >= :score`, { score });
         //     }
         // }
-
-
-        console.log(where);
         const res = await this.resultRepository.find({ where });
-
-
         const res2 = await this.resultRepository.createQueryBuilder('flight_result').getOne()
         // .innerJoin('flight_result.test_name', 'flight_list')
         // .getMany()
 
-        console.log(res2);
 
     }
 
@@ -109,5 +103,13 @@ export class ResultService {
             .into(FlightResult)
             .values(flightResult)
             .execute();
+    }
+
+    async updateFlightResult(Body: FlightResultDto) {
+
+    }
+
+    async deleteFlightResult(id:number[]){
+        
     }
 }
