@@ -92,7 +92,6 @@ export class ResultService {
     async addFlightResult(body: FlightResultFormDto) {
         // this.listRepository.save(body.)
         const flightList: FlightListDto = body;
-        const flightResult: FlightResultDto[] = body.data;
         const listRes = await this.listRepository
             .createQueryBuilder('flight_list')
             .insert()
@@ -100,11 +99,15 @@ export class ResultService {
             .values(flightList)
             .execute();
 
-        const res = await this.resultRepository.createQueryBuilder('flight_result')
+        const flightResult: FlightResultDto[] = body.data.map(t => {
+            t.testId = listRes.identifiers[0].id;
+            return t;
+        });
+
+        await this.resultRepository.createQueryBuilder('flight_result')
             .insert()
             .into(FlightResult)
             .values(flightResult)
-            .execute(); 
-            console.log(listRes, res);
+            .execute();
     }
 }

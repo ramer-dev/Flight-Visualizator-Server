@@ -7,8 +7,8 @@ export class FlightResultDto {
     @IsNumber()
     frequency: number;
     
-    // @IsNumber()
-    // testId: number;
+    @IsNumber()
+    testId: number;
     
     @IsString()
     @IsOptional()
