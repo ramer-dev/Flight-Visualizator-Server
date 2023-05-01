@@ -1,7 +1,10 @@
 import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { ApiNotFoundResponse } from "@nestjs/swagger";
 import { InjectRepository } from "@nestjs/typeorm";
-import { SearchDto } from "common/types/search.type";
+import { FlightListDto } from "common/dto/flightList.dto";
+import { FlightResultDto } from "common/dto/flightResult.dto";
+import { FlightResultFormDto } from "common/dto/flightResultForm.dto";
+import { SearchDto } from "common/dto/search.dto";
 import { FlightList } from "entities/flightList.entity";
 import { FlightResult } from "entities/flightResult.entity";
 import { Between, Equal, JoinTable, Repository, Like } from "typeorm";
@@ -24,12 +27,12 @@ export class ResultService {
         return res;
     }
 
-    async getSpecificResult(id: string, take: number, skip: number): Promise<FlightList> {
+    async getSpecificResult(id: number, take: number, skip: number): Promise<FlightList> {
         const log = new Logger('FlightList');
 
-        const list = await this.listRepository.findOne({ where: { testName: id } })
+        const list = await this.listRepository.findOne({ where: { id } })
         if (!list) throw new NotFoundException();
-        const result = await this.resultRepository.find({ where: { testName: id }, skip, take })
+        const result = await this.resultRepository.find({ where: { testId: id }, skip, take })
 
         list.data = result;
 
@@ -75,7 +78,7 @@ export class ResultService {
 
 
         console.log(where);
-        const res = await this.resultRepository.find({ where});
+        const res = await this.resultRepository.find({ where });
 
 
         const res2 = await this.resultRepository.createQueryBuilder('flight_result').getOne()
@@ -84,5 +87,24 @@ export class ResultService {
 
         console.log(res2);
 
+    }
+
+    async addFlightResult(body: FlightResultFormDto) {
+        // this.listRepository.save(body.)
+        const flightList: FlightListDto = body;
+        const flightResult: FlightResultDto[] = body.data;
+        const listRes = await this.listRepository
+            .createQueryBuilder('flight_list')
+            .insert()
+            .into(FlightList)
+            .values(flightList)
+            .execute();
+
+        const res = await this.resultRepository.createQueryBuilder('flight_result')
+            .insert()
+            .into(FlightResult)
+            .values(flightResult)
+            .execute(); 
+            console.log(listRes, res);
     }
 }

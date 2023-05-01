@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Param } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { SearchDto } from "common/types/search.type";
+import { FlightResultFormDto } from "common/dto/flightResultForm.dto";
+import { SearchDto } from "common/dto/search.dto";
 import { ResultService } from "./result.service";
 
 
@@ -21,10 +22,14 @@ export class ResultController {
 
 
     @Get(':id')
-    getSpecificResult(@Param('id') id: string, @Body('limit') limit: number, @Body('page') page: number) {
+    getSpecificResult(@Param('id') id: number, @Body('limit') limit: number, @Body('page') page: number) {
         return this.resultService.getSpecificResult(id, limit, page);
     }
 
 
+    @Post()
+    AddFlightResult(@Body() body:FlightResultFormDto){
+        return this.resultService.addFlightResult(body);
+    }
 
 }

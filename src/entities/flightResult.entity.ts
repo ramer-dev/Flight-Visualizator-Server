@@ -11,7 +11,7 @@ export class FlightResult {
     @Column("double", {precision:5,scale:3})
     frequency: number;
     @Column()
-    testName: string;
+    testId: number;
     @Column( )
     txmain: string;
     @Column()

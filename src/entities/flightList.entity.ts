@@ -3,7 +3,9 @@ import { FlightResult } from './flightResult.entity';
 
 @Entity()
 export class FlightList {
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn()
+    id : number;
+    @Column()
     testName: string;
     @Column()
     testDate: Date;
@@ -11,6 +13,8 @@ export class FlightList {
     testType: string;
     @Column()
     testRoute: string;
+    @Column()
+    userId: string;
 
     data:FlightResult[];
 }
