@@ -3,6 +3,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'entities/user.entity';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DBModule } from './common/utils/db.options';
@@ -15,7 +16,6 @@ import { UserController } from './user/user.controller';
   imports: [TypeOrmModule.forFeature(
     [User]
   ),
-  PassportModule.register({ defaultStrategy: 'jwt', session: false }),
   
   FlightModule, FileModule, DBModule, LoginModule],
   controllers: [AppController, UserController],

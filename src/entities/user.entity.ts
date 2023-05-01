@@ -1,6 +1,6 @@
 import { Entity, PrimaryColumn, Column } from 'typeorm';
 
-@Entity()
+@Entity('user')
 export class User {
     @PrimaryColumn()
     id: string;
@@ -8,4 +8,6 @@ export class User {
     pw: string;
     @Column()
     role: number;
+    @Column()
+    refreshToken:string;
 } 
