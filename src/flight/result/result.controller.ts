@@ -1,7 +1,9 @@
-import { Body, Controller, Get, Param, Post } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Patch } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import { FlightResultDto } from "common/dto/flightResult.dto";
 import { FlightResultFormDto } from "common/dto/flightResultForm.dto";
 import { SearchDto } from "common/dto/search.dto";
+import { FlightResult } from "entities/flightResult.entity";
 import { ResultService } from "./result.service";
 
 
@@ -16,7 +18,7 @@ export class ResultController {
     }
 
     @Get('search')
-    getSearchResult(@Body() body:SearchDto){
+    getSearchResult(@Body() body: SearchDto) {
         return this.resultService.getSearchResult(body);
     }
 
@@ -28,8 +30,14 @@ export class ResultController {
 
 
     @Post()
-    AddFlightResult(@Body() body:FlightResultFormDto){
+    AddFlightResult(@Body() body: FlightResultFormDto) {
         return this.resultService.addFlightResult(body);
+    }
+
+    @Patch(':id')
+    UpdateFlightResult(@Param('id') id: number, @Body() body: FlightResultDto) {
+        console.log(body);
+        return this.resultService.updateFlightResult(id, body);
     }
 
 }

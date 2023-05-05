@@ -105,11 +105,19 @@ export class ResultService {
             .execute();
     }
 
-    async updateFlightResult(Body: FlightResultDto) {
+    async updateFlightResult(id: number, body: FlightResultDto) {
+        const board = await this.resultRepository.findOne({ where: { id } })
 
+        try {
+            await this.resultRepository.update(id, body)
+            const a = await this.resultRepository.findOne({ where: { id } })
+            console.log(a);
+        } catch (e) {
+            console.error(e)
+        }
     }
 
-    async deleteFlightResult(id:number[]){
-        
+    async deleteFlightResult(id: number[]) {
+
     }
 }

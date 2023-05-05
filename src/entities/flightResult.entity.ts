@@ -1,6 +1,6 @@
-import { isNumber } from 'class-validator';
+import { IsNumber, isNumber } from 'class-validator';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
-import { FlightList } from './flightList.entity';
+
 
 @Entity()
 export class FlightResult {
@@ -8,7 +8,10 @@ export class FlightResult {
     id: number;
     @Column()
     siteName: string;
+
+    @IsNumber()
     @Column("double", {precision:5,scale:3})
+    
     frequency: number;
     @Column()
     testId: number;
