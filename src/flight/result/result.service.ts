@@ -2,7 +2,7 @@ import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { ApiNotFoundResponse } from "@nestjs/swagger";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FlightListDto } from "common/dto/flightList.dto";
-import { FlightResultDto } from "common/dto/flightResult.dto";
+import { InsertFlightResultDto } from "common/dto/flightResult.insert.dto";
 import { FlightResultFormDto } from "common/dto/flightResultForm.dto";
 import { SearchDto } from "common/dto/search.dto";
 import { FlightList } from "entities/flightList.entity";
@@ -93,7 +93,7 @@ export class ResultService {
             .values(flightList)
             .execute();
 
-        const flightResult: FlightResultDto[] = body.data.map(t => {
+        const flightResult: InsertFlightResultDto[] = body.data.map(t => {
             t.testId = listRes.identifiers[0].id;
             return t;
         });
@@ -105,7 +105,7 @@ export class ResultService {
             .execute();
     }
 
-    async updateFlightResult(id: number, body: FlightResultDto) {
+    async updateFlightResult(id: number, body: InsertFlightResultDto) {
         const board = await this.resultRepository.findOne({ where: { id } })
 
         try {

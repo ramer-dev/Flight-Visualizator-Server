@@ -1,8 +1,8 @@
 import { IsString, IsNumber, IsDate, IsOptional, IsArray } from 'class-validator'
 import { FlightListDto } from './flightList.dto';
-import { FlightResultDto } from './flightResult.dto';
+import { InsertFlightResultDto } from './flightResult.insert.dto';
 
 export class FlightResultFormDto extends FlightListDto{
     @IsArray()
-    data :  FlightResultDto[]
+    data :  InsertFlightResultDto[]
 } 
