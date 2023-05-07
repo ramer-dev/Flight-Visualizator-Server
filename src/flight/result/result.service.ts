@@ -3,6 +3,7 @@ import { ApiNotFoundResponse } from "@nestjs/swagger";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FlightListDto } from "common/dto/flightList.dto";
 import { InsertFlightResultDto } from "common/dto/flightResult.insert.dto";
+import { UpdateFlightResultDto } from "common/dto/flightResult.update.dto";
 import { FlightResultFormDto } from "common/dto/flightResultForm.dto";
 import { SearchDto } from "common/dto/search.dto";
 import { FlightList } from "entities/flightList.entity";
@@ -105,7 +106,7 @@ export class ResultService {
             .execute();
     }
 
-    async updateFlightResult(id: number, body: InsertFlightResultDto) {
+    async updateFlightResult(id: number, body: UpdateFlightResultDto) {
         const board = await this.resultRepository.findOne({ where: { id } })
 
         try {

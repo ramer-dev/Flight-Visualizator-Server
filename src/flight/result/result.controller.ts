@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Param, Post, Patch } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { InsertFlightResultDto } from "common/dto/flightResult.insert.dto";
+import { UpdateFlightResultDto } from "common/dto/flightResult.update.dto";
 import { FlightResultFormDto } from "common/dto/flightResultForm.dto";
 import { SearchDto } from "common/dto/search.dto";
 import { FlightResult } from "entities/flightResult.entity";
@@ -35,7 +36,7 @@ export class ResultController {
     }
 
     @Patch(':id')
-    UpdateFlightResult(@Param('id') id: number, @Body() body: InsertFlightResultDto) {
+    UpdateFlightResult(@Param('id') id: number, @Body() body: UpdateFlightResultDto) {
         console.log(body);
         return this.resultService.updateFlightResult(id, body);
     }
