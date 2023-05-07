@@ -8,7 +8,7 @@ import { FlightResultFormDto } from "common/dto/flightResultForm.dto";
 import { SearchDto } from "common/dto/search.dto";
 import { FlightList } from "entities/flightList.entity";
 import { FlightResult } from "entities/flightResult.entity";
-import { Between, Equal, JoinTable, Repository, Like } from "typeorm";
+import { Between, Repository, Like } from "typeorm";
 
 @Injectable()
 export class ResultService {
@@ -119,6 +119,10 @@ export class ResultService {
     }
 
     async deleteFlightResult(id: number[]) {
-
+        await this.resultRepository.createQueryBuilder('flight_result')
+        .update()
+        .set({status:false})
+        .where('flight_result.id in (:id)', {id})
+        .execute()
     }
 }

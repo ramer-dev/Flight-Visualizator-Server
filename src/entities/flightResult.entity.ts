@@ -29,5 +29,6 @@ export class FlightResult {
     distance: number; 
     @Column()
     height: number;
-
+    @Column()
+    status: boolean;
 } 

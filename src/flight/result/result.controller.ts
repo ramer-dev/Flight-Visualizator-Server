@@ -1,5 +1,8 @@
-import { Body, Controller, Get, Param, Post, Patch } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Patch, UseGuards, Delete } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import { JwtAuthGuard } from "common/auth/jwt.guard";
+import { Roles } from "common/auth/role.decorator";
+import { RolesGuard } from "common/auth/role.guard";
 import { InsertFlightResultDto } from "common/dto/flightResult.insert.dto";
 import { UpdateFlightResultDto } from "common/dto/flightResult.update.dto";
 import { FlightResultFormDto } from "common/dto/flightResultForm.dto";
@@ -31,14 +34,23 @@ export class ResultController {
 
 
     @Post()
+    @Roles(1)
+    @UseGuards(JwtAuthGuard, RolesGuard)
     AddFlightResult(@Body() body: FlightResultFormDto) {
         return this.resultService.addFlightResult(body);
     }
 
     @Patch(':id')
+    @Roles(1)
+    @UseGuards(JwtAuthGuard, RolesGuard)
     UpdateFlightResult(@Param('id') id: number, @Body() body: UpdateFlightResultDto) {
-        console.log(body);
         return this.resultService.updateFlightResult(id, body);
     }
 
+    @Delete()
+    // @Roles(1)
+    // @UseGuards(JwtAuthGuard, RolesGuard)
+    DeleteFlightResult(@Body('id') id : number[]) {
+        return this.resultService.deleteFlightResult(id)
+    }
 }
