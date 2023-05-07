@@ -2,12 +2,13 @@ import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { ApiNotFoundResponse } from "@nestjs/swagger";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FlightListDto } from "common/dto/flightList.dto";
-import { FlightResultDto } from "common/dto/flightResult.dto";
+import { InsertFlightResultDto } from "common/dto/flightResult.insert.dto";
+import { UpdateFlightResultDto } from "common/dto/flightResult.update.dto";
 import { FlightResultFormDto } from "common/dto/flightResultForm.dto";
 import { SearchDto } from "common/dto/search.dto";
 import { FlightList } from "entities/flightList.entity";
 import { FlightResult } from "entities/flightResult.entity";
-import { Between, Equal, JoinTable, Repository, Like } from "typeorm";
+import { Between, Repository, Like } from "typeorm";
 
 @Injectable()
 export class ResultService {
@@ -93,7 +94,7 @@ export class ResultService {
             .values(flightList)
             .execute();
 
-        const flightResult: FlightResultDto[] = body.data.map(t => {
+        const flightResult: InsertFlightResultDto[] = body.data.map(t => {
             t.testId = listRes.identifiers[0].id;
             return t;
         });
@@ -105,11 +106,23 @@ export class ResultService {
             .execute();
     }
 
-    async updateFlightResult(Body: FlightResultDto) {
+    async updateFlightResult(id: number, body: UpdateFlightResultDto) {
+        const board = await this.resultRepository.findOne({ where: { id } })
 
+        try {
+            await this.resultRepository.update(id, body)
+            const a = await this.resultRepository.findOne({ where: { id } })
+            console.log(a);
+        } catch (e) {
+            console.error(e)
+        }
     }
 
-    async deleteFlightResult(id:number[]){
-        
+    async deleteFlightResult(id: number[]) {
+        await this.resultRepository.createQueryBuilder('flight_result')
+        .update()
+        .set({status:false})
+        .where('flight_result.id in (:id)', {id})
+        .execute()
     }
 }

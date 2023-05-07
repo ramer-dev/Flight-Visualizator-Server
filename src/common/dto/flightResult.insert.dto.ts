@@ -1,8 +1,8 @@
 import { IsString, IsNumber, IsDate, IsOptional } from 'class-validator'
 
-export class FlightResultDto {
+export class InsertFlightResultDto {
     @IsString()
-    sitename: string;
+    siteName: string;
     
     @IsNumber()
     frequency: number;
