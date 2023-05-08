@@ -96,6 +96,7 @@ export class ResultService {
         } catch (e) {
             console.error(e)
         }
+        return id;
     }
 
     async deleteFlightResult(id: number[]) {
