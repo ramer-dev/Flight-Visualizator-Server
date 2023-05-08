@@ -1,8 +1,8 @@
 import { IsString, IsNumber, IsDate, IsOptional, IsArray } from 'class-validator'
-import { FlightListDto } from './flightList.dto';
-import { InsertFlightResultDto } from './flightResult.insert.dto';
+import { InsertFlightListDto } from './flightList/flightList.insert.dto';
+import { InsertFlightResultDto } from './flightResult/flightResult.insert.dto';
 
-export class FlightResultFormDto extends FlightListDto{
+export class FlightResultFormDto extends InsertFlightListDto{
     @IsArray()
     data :  InsertFlightResultDto[]
 } 
