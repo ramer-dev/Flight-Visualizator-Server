@@ -1,20 +1,23 @@
 import { IsString, IsNumber, IsDate, IsOptional } from 'class-validator'
 
-export class FlightListDto {
+export class InsertFlightListDto {
+    @IsOptional()
+    id : number;
+
     @IsString()
-    testName : string;
+    testName: string;
 
     // @IsDate()
     @IsString()
     testDate: string;
 
     @IsString()
-    testType:string;
+    testType: string;
 
     @IsString()
     @IsOptional()
-    testRoute:string;
+    testRoute: string;
 
     @IsString()
-    userId:string;
+    userId: string;
 }

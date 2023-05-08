@@ -3,8 +3,8 @@ import { ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "common/auth/jwt.guard";
 import { Roles } from "common/auth/role.decorator";
 import { RolesGuard } from "common/auth/role.guard";
-import { InsertFlightResultDto } from "common/dto/flightResult.insert.dto";
-import { UpdateFlightResultDto } from "common/dto/flightResult.update.dto";
+import { InsertFlightResultDto } from "common/dto/flightResult/flightResult.insert.dto";
+import { UpdateFlightResultDto } from "common/dto/flightResult/flightResult.update.dto";
 import { FlightResultFormDto } from "common/dto/flightResultForm.dto";
 import { SearchDto } from "common/dto/search.dto";
 import { FlightResult } from "entities/flightResult.entity";
@@ -34,15 +34,15 @@ export class ResultController {
 
 
     @Post()
-    @Roles(1)
-    @UseGuards(JwtAuthGuard, RolesGuard)
-    AddFlightResult(@Body() body: FlightResultFormDto) {
+    // @Roles(1)
+    // @UseGuards(JwtAuthGuard, RolesGuard)
+    AddFlightResult(@Body() body: InsertFlightResultDto[]) {
         return this.resultService.addFlightResult(body);
     }
 
     @Patch(':id')
-    @Roles(1)
-    @UseGuards(JwtAuthGuard, RolesGuard)
+    // @Roles(1)
+    // @UseGuards(JwtAuthGuard, RolesGuard)
     UpdateFlightResult(@Param('id') id: number, @Body() body: UpdateFlightResultDto) {
         return this.resultService.updateFlightResult(id, body);
     }

@@ -1,5 +1,5 @@
 import { IsNumber, isNumber } from 'class-validator';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
 
 
 @Entity()
@@ -31,4 +31,8 @@ export class FlightResult {
     height: number;
     @Column()
     status: boolean;
+    @UpdateDateColumn()
+    updatedAt: Date;
+    @DeleteDateColumn()
+    deletedAt: Date;
 } 
