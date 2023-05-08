@@ -7,9 +7,9 @@ export class Notice {
     @Column()
     title: string;
     @Column()
-    context: number;
+    context: string;
     @Column()
-    date:string;
+    date:Date;
     @Column()
     type:string;
     @Column()

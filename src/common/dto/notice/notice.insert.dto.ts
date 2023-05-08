@@ -1,4 +1,4 @@
-import { IsDate, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsDate, IsDateString, IsISO8601, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class InsertNoticeDto {
     @IsOptional()
@@ -6,9 +6,9 @@ export class InsertNoticeDto {
     id: number;
     @IsString()
     title: string;
-    @IsNumber()
-    context: number;
-    @IsDate()
+    @IsString()
+    context: string;
+    @IsDateString()
     date:Date;
     @IsString()
     type:string;
