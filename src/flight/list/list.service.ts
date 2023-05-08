@@ -36,12 +36,7 @@ export class ListService {
 
     async addFlightList(body: FlightResultFormDto) {
         const flightList: InsertFlightListDto = body;
-        const listRes = await this.listRepository
-            .createQueryBuilder('flight_list')
-            .insert()
-            .into(FlightList)
-            .values(flightList)
-            .execute();
+        const listRes = await this.listRepository.insert(flightList)
 
         this.log.log(`add flight List. affected rows:${body.data.length}`)
 

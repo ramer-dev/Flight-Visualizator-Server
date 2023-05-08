@@ -29,10 +29,9 @@ export class ResultService {
     async getSpecificResult(id: number, take: number, skip: number): Promise<FlightList> {
         const list = await this.listRepository.findOne({ where: { id } })
         if (!list) throw new NotFoundException();
+
         const result = await this.resultRepository.find({ where: { testId: id }, skip, take })
-
         list.data = result;
-
         this.log.log(`get specific data of:${id} : ${result.length}EA`)
         return list;
     }
@@ -83,11 +82,7 @@ export class ResultService {
     }
 
     async addFlightResult(body: InsertFlightResultDto[]) {
-        await this.resultRepository.createQueryBuilder('flight_result')
-            .insert()
-            .into(FlightResult)
-            .values(body)
-            .execute();
+        await this.resultRepository.insert(body)
         this.log.log(`post flight result rows : ${body.length}`)
     }
 
@@ -96,7 +91,7 @@ export class ResultService {
 
         try {
             await this.resultRepository.update(id, body)
-            const a = await this.resultRepository.findOne({ where: { id } })
+            // const a = await this.resultRepository.findOne({ where: { id } })
             this.log.log(`updated flight result id : ${id}`)
         } catch (e) {
             console.error(e)
@@ -104,11 +99,7 @@ export class ResultService {
     }
 
     async deleteFlightResult(id: number[]) {
-        await this.resultRepository.createQueryBuilder('flight_result')
-            .update()
-            .set({ status: false })
-            .where('flight_result.id in (:id)', { id })
-            .execute()
+        await this.resultRepository.softDelete(id);
         this.log.log(`deleted flight result id : ${id}`)
     }
 }

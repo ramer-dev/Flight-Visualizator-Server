@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
 
 @Entity()
 export class Notice {
@@ -14,4 +14,10 @@ export class Notice {
     type:string;
     @Column()
     version:string;
+    @Column()
+    user:string;
+    @UpdateDateColumn()
+    updatedAt:Date;
+    @DeleteDateColumn()
+    deletedAt:Date;
 } 
