@@ -1,7 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Entity, PrimaryColumn, Column, Point } from 'typeorm';
-import { DeleteDateColumn } from 'typeorm/decorator/columns/DeleteDateColumn';
-import { PrimaryGeneratedColumn } from 'typeorm/decorator/columns/PrimaryGeneratedColumn';
+import { Entity, PrimaryGeneratedColumn, Column, Point, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
 
 @Entity()
 export class FixPoint {
@@ -16,6 +14,10 @@ export class FixPoint {
     @ApiProperty({example:'Point Binary String'})
     @Column({type:'point'})
     pointCoordinate: Point;
+
+    @ApiProperty({example:'2023-00-00'})
+    @UpdateDateColumn()
+    updatedAt: Date | null;
 
     @ApiProperty({example:'2023-00-00'})
     @DeleteDateColumn()
