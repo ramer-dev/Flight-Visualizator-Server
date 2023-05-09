@@ -14,7 +14,7 @@ export class FixPoint {
     pointName: string;
 
     @ApiProperty({example:'Point Binary String'})
-    @Column()
+    @Column({type:'point'})
     pointCoordinate: Point;
 
     @ApiProperty({example:'2023-00-00'})

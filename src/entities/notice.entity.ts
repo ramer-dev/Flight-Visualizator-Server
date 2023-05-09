@@ -1,9 +1,9 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Entity, Column, PrimaryGeneratedColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
 
 @Entity()
 export class Notice {
-    @ApiProperty({example:1})
+    @ApiPropertyOptional({example:1})
     @PrimaryGeneratedColumn()
     id: number;
     
@@ -32,10 +32,10 @@ export class Notice {
     user:string;
     
     @UpdateDateColumn()
-    @ApiProperty({example:"2023-00-00"})
+    @ApiPropertyOptional({example:"2023-00-00"})
     updatedAt:Date;
 
     @DeleteDateColumn()
-    @ApiProperty({example:"2023-00-00"})
+    @ApiPropertyOptional({example:"2023-00-00"})
     deletedAt:Date;
 } 

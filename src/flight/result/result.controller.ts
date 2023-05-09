@@ -3,11 +3,11 @@ import { ApiBadRequestResponse, ApiBody, ApiNotFoundResponse, ApiOkResponse, Api
 import { JwtAuthGuard } from "common/auth/jwt.guard";
 import { Roles } from "common/auth/role.decorator";
 import { RolesGuard } from "common/auth/role.guard";
-import { InsertFlightResultDto } from "common/dto/flightResult/flightResult.insert.dto";
-import { UpdateFlightResultDto } from "common/dto/flightResult/flightResult.update.dto";
-import { FlightResultFormDto } from "common/dto/flightResultForm.dto";
+import { InsertFlightResultDto } from "common/dto/flight-result/flight-result.insert.dto";
+import { UpdateFlightResultDto } from "common/dto/flight-result/flight-result.update.dto";
+import { FlightResultFormDto } from "common/dto/flight-result.form.dto";
 import { SearchDto } from "common/dto/search.dto";
-import { FlightResult } from "entities/flightResult.entity";
+import { FlightResult } from "entities/flight-result.entity";
 import { ResultService } from "./result.service";
 
 

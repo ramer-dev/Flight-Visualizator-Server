@@ -2,10 +2,10 @@ import { Module } from "@nestjs/common";
 import { ListController } from "./list/list.controller";
 import { ListService } from "./list/list.service";
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { FlightList } from "../entities/flightList.entity";
+import { FlightList } from "../entities/flight-list.entity";
 import { ResultController } from "./result/result.controller";
 import { ResultService } from "./result/result.service";
-import { FlightResult } from "entities/flightResult.entity";
+import { FlightResult } from "entities/flight-result.entity";
 
 @Module({
     imports: [

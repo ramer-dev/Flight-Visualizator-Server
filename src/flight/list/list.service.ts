@@ -1,11 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { FlightList } from 'entities/flightList.entity';
+import { FlightList } from 'entities/flight-list.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { FlightResult } from 'entities/flightResult.entity';
-import { FlightResultFormDto } from 'common/dto/flightResultForm.dto';
-import { InsertFlightListDto } from 'common/dto/flightList/flightList.insert.dto';
-import { UpdateFlightListDto } from 'common/dto/flightList/flightList.update.dto';
+import { FlightResult } from 'entities/flight-result.entity';
+import { FlightResultFormDto } from 'common/dto/flight-result.form.dto';
+import { InsertFlightListDto } from 'common/dto/flight-list/flight-list.insert.dto';
+import { UpdateFlightListDto } from 'common/dto/flight-list/flight-list.update.dto';
 
 @Injectable()
 export class ListService {
