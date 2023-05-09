@@ -9,8 +9,13 @@ export function setupSwagger(app: INestApplication): void {
     const options = new DocumentBuilder()
     .setTitle("Flight Visualizator API Docs")
     .setDescription("비행검사 시각화 서버 API")
-    .setVersion('2.0.0')
+    .setTermsOfService('MIT')
+    .setContact('신희상', 'https://github.com/ramer-dev', 'ramer-dev@kakao.com')
+    .setVersion('1.0.0')
+    .setBasePath('localhost:3000')
     .build();
+
+
 
     const document = SwaggerModule.createDocument(app, options);
 
