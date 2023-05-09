@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { PointType } from "common/dto/coordinate.types";
 import { InsertFixPointDto } from "common/dto/fix-point/fix-point.insert.dto";
 import { UpdateFixPointDto } from "common/dto/fix-point/fix-point.update.dto";
 import { FixPoint } from "entities/fix-point.entity";
@@ -35,7 +36,7 @@ export class FixPointService {
 
     async createFixPoint(body: InsertFixPointDto) {
         const { pointCoordinate, pointName } = body;
-        const point = `${pointCoordinate[0]} ${pointCoordinate[1]}`;
+        const point: PointType = { lat: pointCoordinate[0], lng: pointCoordinate[1] }
         try {
             await this.fixPointRepository
                 .createQueryBuilder()
@@ -43,7 +44,7 @@ export class FixPointService {
                 .into(FixPoint)
                 .values({
                     pointName,
-                    pointCoordinate: () => `ST_GeomFromText('POINT(${point})')`
+                    pointCoordinate: point
                 })
                 .execute()
         } catch (err) {
@@ -53,13 +54,13 @@ export class FixPointService {
 
     async updateFixPoint(id: number, body: UpdateFixPointDto) {
         const { pointCoordinate, pointName } = body;
-        const point = `${pointCoordinate[0]} ${pointCoordinate[1]}`;
+        const point: PointType = { lat: pointCoordinate[0], lng: pointCoordinate[1] }
 
         try {
             await this.fixPointRepository
                 .createQueryBuilder()
                 .update()
-                .set({ pointName, pointCoordinate: () => `ST_GeomFromText('POINT(${point})')` })
+                .set({ pointName, pointCoordinate: point })
                 .where({ id })
                 .execute()
         } catch (e) {

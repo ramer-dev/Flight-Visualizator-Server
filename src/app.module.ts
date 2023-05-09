@@ -10,10 +10,11 @@ import { LoginModule } from './login/login.module';
 import { UserController } from './user/user.controller';
 import { NoticeModule } from './notice/notice.module';
 import { FixPointModule } from './fix-point/fix-point.module';
+import { SectorModule } from './sector/sector.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User]),
-  FlightModule, FileModule, DBModule, LoginModule, NoticeModule, FixPointModule],
+  FlightModule, FileModule, DBModule, LoginModule, NoticeModule, FixPointModule, SectorModule],
   controllers: [AppController, UserController],
   providers: [AppService],
 })
