@@ -7,15 +7,14 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class NoticeService {
-    private readonly log = new Logger(NoticeService.name);
     constructor(
         @InjectRepository(Notice)
         private readonly noticeRepository: Repository<Notice>
     ) {
 
     }
-    async getNotice(limit?: number, page?: number) {
-        return this.noticeRepository.find({ skip: page, take: limit });
+    async getNotice(limit?: number, skip?: number) {
+        return this.noticeRepository.find({ skip, take: limit });
     }
 
     async addNotice(body: InsertNoticeDto) {

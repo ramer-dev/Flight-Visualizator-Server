@@ -1,12 +1,12 @@
 import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { ApiNotFoundResponse } from "@nestjs/swagger";
 import { InjectRepository } from "@nestjs/typeorm";
-import { InsertFlightResultDto } from "common/dto/flightResult/flightResult.insert.dto";
-import { UpdateFlightResultDto } from "common/dto/flightResult/flightResult.update.dto";
-import { FlightResultFormDto } from "common/dto/flightResultForm.dto";
+import { InsertFlightResultDto } from "common/dto/flight-result/flight-result.insert.dto";
+import { UpdateFlightResultDto } from "common/dto/flight-result/flight-result.update.dto";
+import { FlightResultFormDto } from "common/dto/flight-result.form.dto";
 import { SearchDto } from "common/dto/search.dto";
-import { FlightList } from "entities/flightList.entity";
-import { FlightResult } from "entities/flightResult.entity";
+import { FlightList } from "entities/flight-list.entity";
+import { FlightResult } from "entities/flight-result.entity";
 import { Between, Repository, Like } from "typeorm";
 
 @Injectable()
@@ -96,6 +96,7 @@ export class ResultService {
         } catch (e) {
             console.error(e)
         }
+        return id;
     }
 
     async deleteFlightResult(id: number[]) {
