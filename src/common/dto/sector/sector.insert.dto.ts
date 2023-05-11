@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { Type } from "class-transformer/types/decorators";
-import { IsDateString, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
+import { Type } from "class-transformer";
+import { IsArray, IsDateString, IsNotEmpty, IsNotEmptyObject, IsNumber, IsOptional, IsString, MinLength, ValidateNested } from "class-validator";
 import { PointType, PolygonType } from "../coordinate.types";
 
 export class InsertSectorDto {
@@ -14,8 +14,10 @@ export class InsertSectorDto {
     sectorName: string;
 
     @ApiProperty({ example: [{ lat: 123.5, lng: 25.5 }] })
+    @IsArray()
     @ValidateNested({ each: true })
-    sectorData: PolygonType
+    @Type(() => PointType)
+    sectorData: PointType[];
 
     @ApiProperty({ example: 0 })
     @IsNumber()

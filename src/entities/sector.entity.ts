@@ -15,18 +15,23 @@ export class Sector {
             from: (value: string) => {
                 const result = value.replace(/[^\d .,-]/g, '').trim().split(',').map(t => {
                     const parsedPoint = t.split(' ').map(Number)
+                    console.log(parsedPoint)
                     let point: PointType = { lat: parsedPoint[0], lng: parsedPoint[1] };
 
                     return point;
                 })
                 return result;
             },
-            to: (value: { lat: number, lng: number }) => {
-                return `POLYGON(${value.lat} ${value.lng})`
+            to: (value: PointType[]) => {
+                // value.map(t => {console.log(t.lat + ' ' + t.lng)})
+                const text = value.map(t => `${t.lat} ${t.lng}`).join(', ');
+                return `POLYGON((${text}))`
             }
         }
     })
-    sectorData: PolygonType;
+
+
+    sectorData: PointType[];
 
     @Column()
     sectorAreaId: number;
