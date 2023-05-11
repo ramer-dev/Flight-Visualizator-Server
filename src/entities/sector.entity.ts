@@ -26,7 +26,7 @@ export class Sector {
             }
         }
     })
-    sectorData: Polygon | PolygonType;
+    sectorData: PolygonType;
 
     @Column()
     sectorAreaId: number;

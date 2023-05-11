@@ -36,16 +36,13 @@ export class FixPointService {
 
     async createFixPoint(body: InsertFixPointDto) {
         const { pointCoordinate, pointName } = body;
-        const point: PointType = { lat: pointCoordinate[0], lng: pointCoordinate[1] }
+        // const point: PointType = { lat: pointCoordinate[0], lng: pointCoordinate[1] }
         try {
             await this.fixPointRepository
                 .createQueryBuilder()
                 .insert()
                 .into(FixPoint)
-                .values({
-                    pointName,
-                    pointCoordinate: point
-                })
+                .values({pointName, pointCoordinate})
                 .execute()
         } catch (err) {
             throw err;
@@ -54,13 +51,13 @@ export class FixPointService {
 
     async updateFixPoint(id: number, body: UpdateFixPointDto) {
         const { pointCoordinate, pointName } = body;
-        const point: PointType = { lat: pointCoordinate[0], lng: pointCoordinate[1] }
+        // const point: PointType = { lat: pointCoordinate[0], lng: pointCoordinate[1] }
 
         try {
             await this.fixPointRepository
                 .createQueryBuilder()
                 .update()
-                .set({ pointName, pointCoordinate: point })
+                .set({ pointName, pointCoordinate })
                 .where({ id })
                 .execute()
         } catch (e) {

@@ -1,5 +1,9 @@
+import { IsNumber } from "class-validator";
+
 export class PointType {
+    @IsNumber()
     lat: number;
+    @IsNumber()
     lng: number;
 }
 
