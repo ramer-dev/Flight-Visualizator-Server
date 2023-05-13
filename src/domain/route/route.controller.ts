@@ -1,6 +1,6 @@
-import { Controller, Get } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { RouteListService } from "./route-list.service";
+import { InsertRouteListDto } from "common/dto/route/route-list.insert.dto";
 import { RouteService } from "./route.service";
 
 @Controller('route')
@@ -8,12 +8,21 @@ import { RouteService } from "./route.service";
 export class RouteController {
     constructor(
         private readonly routeService: RouteService,
-        private readonly routeListService : RouteListService
     ) { }
 
     @Get()
     getEntireRoute() {
-        return this.routeListService.getEntireRoute();
+        return this.routeService.getEntireRoute();
+    }
+
+    @Get(':id')
+    getSingleRoute(@Param('id') id : number) {
+        return this.routeService.getSingleRoute(id)
+    }
+
+    @Post()
+    addRoute(@Body() body : InsertRouteListDto){
+        return this.routeService.addSingleRoute(body);
     }
 
 }

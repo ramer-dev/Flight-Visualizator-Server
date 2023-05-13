@@ -5,15 +5,14 @@ import { isTypedArray } from "util/types";
 import { PointType } from "../coordinate.types";
 
 export class InsertRouteDto {
-    @ApiPropertyOptional({ example: 1 })
+    @ApiProperty({ example: 1 })
     @IsString()
-    routeNmae: string;
+    routeName: string;
     // @PrimaryColumn()
     // fixPoint: string;
-    @ApiProperty({ type: () => [PointType] })
-    @IsArray()
-    @IsNotEmpty()
-    routePoint: PointType[]
+    @ApiProperty({ example: 'AGAVO' })
+    @IsString()
+    routePoint: string
 
     @IsNumber()
     routeEntry: number;

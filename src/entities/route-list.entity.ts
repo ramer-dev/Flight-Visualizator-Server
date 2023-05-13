@@ -9,6 +9,6 @@ export class RouteList {
     @Column()
     routeName: string;
 
-    @OneToMany(() => Route, route => route.route, { eager: true })
+    @OneToMany(() => Route, route => route.route)
     routeData: Route
 }

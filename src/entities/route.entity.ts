@@ -10,8 +10,8 @@ export class Route {
     @Column()
     routeName: string;
 
-    // @Column()
-    // fixPoint: string;
+    @Column()
+    routePoint: string;
 
     @Column()
     routeEntry: number;
@@ -28,12 +28,12 @@ export class Route {
     @Column()
     routeType: string;
 
-    @ManyToOne(() => FixPoint, fp => fp.pointName, { eager: true })
+    @ManyToOne(() => FixPoint, fp => fp.pointName)
     @JoinColumn({
         name: 'route_point',
         referencedColumnName: 'pointName'
     })
-    routePoint: FixPoint[]
+    routePointData: FixPoint
 
     @ManyToOne(() => RouteList, rl => rl.routeData)
     @JoinColumn({
