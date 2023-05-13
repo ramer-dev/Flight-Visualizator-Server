@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Entity, PrimaryColumn, Column, JoinColumn, OneToMany } from 'typeorm';
+import { Entity, PrimaryColumn, Column, JoinColumn, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
 import { Sector } from './sector.entity';
 
 @Entity()
 export class Area {
     @ApiProperty({ example: 1 })
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn()
     areaId: number;
 
     @ApiProperty({ example: '대구' })
@@ -16,7 +16,12 @@ export class Area {
     @Column()
     areaColor: string;
 
+    @UpdateDateColumn()
+    updatedAt: Date;
 
-    @OneToMany(() => Sector, sector => sector.sectorAreaId)
+    @DeleteDateColumn()
+    deletedAt: Date;
+
+    @OneToMany(() => Sector, sector => sector.sectorArea)
     sectorArea: Sector;
 } 
