@@ -8,9 +8,9 @@ import { FileModule } from './file/file.module';
 import { FlightModule } from './flight/flight.module';
 import { LoginModule } from './login/login.module';
 import { UserController } from './user/user.controller';
-import { NoticeModule } from './notice/notice.module';
-import { FixPointModule } from './fix-point/fix-point.module';
-import { SectorModule } from './sector/sector.module';
+import { NoticeModule } from 'domain/notice/notice.module';
+import { FixPointModule } from 'domain/fix-point/fix-point.module';
+import { SectorModule } from 'domain/sector/sector.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User]),

@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { InsertSectorDto } from 'common/dto/sector/sector.insert.dto';
 import { UpdateSectorDto } from 'common/dto/sector/sector.update.dto';
+import { AreaService } from '../area/area.service';
 import { SectorService } from './sector.service';
 
 @Controller('sector')
@@ -9,7 +10,7 @@ export class SectorController {
 
     // @Get('area')
     // getArea(){
-
+    //     return this.areaService.getEntireArea();
     // }
 
     @Get(':id')
