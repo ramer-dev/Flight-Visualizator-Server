@@ -3,16 +3,14 @@ import { IsArray, IsHexColor, IsNotEmpty, IsNumber, IsOptional, IsRgbColor, IsSt
 import { FixPoint } from "entities/fix-point.entity";
 import { isTypedArray } from "util/types";
 import { PointType } from "../coordinate.types";
+import { RouteBaseDto } from "./route.base.insert.dto";
 
-export class InsertRouteDto {
+export class InsertRouteDto extends RouteBaseDto {
     @ApiProperty({ example: 1 })
     @IsString()
     routeName: string;
     // @PrimaryColumn()
     // fixPoint: string;
-    @ApiProperty({ example: 'AGAVO' })
-    @IsString()
-    routePoint: string
 
     @IsNumber()
     routeEntry: number;

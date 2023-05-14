@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Param, Post } from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { InsertRouteListDto } from "common/dto/route/route-list.insert.dto";
+import { UpdateRouteListDto } from "common/dto/route/route-list.update.dto";
 import { RouteService } from "./route.service";
 
 @Controller('route')
@@ -23,6 +24,11 @@ export class RouteController {
     @Post()
     addRoute(@Body() body : InsertRouteListDto){
         return this.routeService.addSingleRoute(body);
+    }
+
+    @Patch(':id')
+    updateRoute(@Param('id') id : number, @Body() body : UpdateRouteListDto){
+        return this.routeService.updateRoute(id, body);
     }
 
 }

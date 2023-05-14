@@ -1,4 +1,10 @@
 import { PartialType } from "@nestjs/swagger";
-import { InsertRouteListDto } from "./route-list.insert.dto";
+import { IsArray, IsOptional } from "class-validator";
+import { RouteListBaseDto } from "./route-list.base.insert.dto";
+import { UpdateRouteDto } from "./route.update.dto";
 
-export class UpdateRouteListDto extends PartialType(InsertRouteListDto) { }
+export class UpdateRouteListDto extends PartialType(RouteListBaseDto) {
+    @IsArray()
+    @IsOptional()
+    routeData: UpdateRouteDto[];
+ }
