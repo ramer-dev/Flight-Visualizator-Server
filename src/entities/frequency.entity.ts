@@ -1,13 +1,17 @@
-import { Entity, PrimaryColumn, Column } from 'typeorm';
+import { Entity, PrimaryColumn, Column, PrimaryGeneratedColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
 
 @Entity()
 export class Frequency {
-    @PrimaryColumn( "double", {precision:5,scale:3})
+    @PrimaryGeneratedColumn()
+    frequencyId: number;
+    @Column("double", { precision: 5, scale: 3 })
     frequency: number;
-    @PrimaryColumn()
-    frequencySite: string;
     @Column()
-    frequencySector: string;
+    frequencySiteName: string;
     @Column()
-    isdeleted:boolean;
+    frequencySiteId: number;
+    @UpdateDateColumn()
+    updatedAt: Date;
+    @DeleteDateColumn()
+    deletedAt: Date;
 } 
