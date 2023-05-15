@@ -18,12 +18,24 @@ const mkdir = (directory: string) => {
 };
 
 mkdir('uploads');
+mkdir('uploads/route');
+mkdir('uploads/ocr');
 
-export const multerOptionsFactory = (folder:string): MulterOptions => {
+export const multerOptionsFactory = (): MulterOptions => {
     return {
         storage: multer.diskStorage({
             destination(req, file, done) { // 파일을 저장할 위치를 설정합니다
-                done(null, path.join(process.cwd(), 'uploads'));
+                
+                if (file.mimetype === 'image/png' || file.mimetype === 'application/pdf') {
+                    done(null, path.join(process.cwd(), 'uploads/ocr'));
+                } else if (file.mimetype === 'text/plain') {
+                    done(null, path.join(process.cwd(), 'uploads/route'))
+                } else {
+                    done({
+                        name: "Type Exception",
+                        message: `${file.mimetype} type is unknown`
+                    }, path.join(process.cwd()))
+                }
             },
 
             filename(req, file, done) { // 파일의 이름을 설정합니다.
