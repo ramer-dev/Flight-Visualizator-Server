@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Entity, PrimaryColumn, Column, OneToMany, JoinColumn, PrimaryGeneratedColumn, ManyToMany, JoinTable, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
+import { Entity, PrimaryColumn, Column, OneToMany, JoinColumn, PrimaryGeneratedColumn, ManyToMany, JoinTable, UpdateDateColumn, DeleteDateColumn, CreateDateColumn } from 'typeorm';
 import { FlightResult } from './flight-result.entity';
 
 @Entity()
@@ -13,7 +13,7 @@ export class FlightList {
     testName: string;
 
     @ApiProperty({example:'2023-00-00'})
-    @Column()
+    @CreateDateColumn()
     testDate: Date;
 
     @ApiProperty({example:'정기검사'})

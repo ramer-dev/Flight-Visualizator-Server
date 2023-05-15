@@ -7,7 +7,7 @@ import { InsertFlightListDto } from "common/dto/flight-list/flight-list.insert.d
 import { UpdateFlightListDto } from "common/dto/flight-list/flight-list.update.dto";
 import { FlightResultFormDto } from "common/dto/flight-result.form.dto";
 import { FlightList } from "entities/flight-list.entity";
-import { ResultService } from "flight/result/result.service";
+import { ResultService } from "domain/flight/result/result.service";
 import { ListService } from "./list.service";
 
 @Controller('flight/list')

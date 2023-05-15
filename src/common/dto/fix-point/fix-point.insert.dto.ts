@@ -1,6 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { Type, Transform, plainToInstance } from "class-transformer";
+import { IsDefined, IsNotEmptyObject, IsObject, ValidateNested, ValidationTypes } from "class-validator";
 import { ArrayMaxSize, ArrayMinSize, IsArray, IsDateString, IsNumber, IsOptional, IsString, MaxLength } from "class-validator";
-import { Point } from "typeorm";
+import { PointType } from "../coordinate.types";
 
 export class InsertFixPointDto {
     @ApiPropertyOptional({ example: 1 })
@@ -13,11 +15,13 @@ export class InsertFixPointDto {
     @ApiProperty({ example: 'ABCDE' })
     pointName: string;
 
-    @ApiProperty({ example: [123.5, 25.5] })
-    @IsNumber({},{each:true})
-    @ArrayMinSize(2)
-    @ArrayMaxSize(2)
-    pointCoordinate: number[];
+    @ApiProperty({ example: { lat: 123, lng: 123 } })
+    @IsObject()
+    // @IsDefined()
+    @IsNotEmptyObject()
+    @ValidateNested()
+    @Type(() => PointType)
+    pointCoordinate: PointType;
 
     @ApiPropertyOptional({ example: '2023-00-00' })
     @IsOptional()
