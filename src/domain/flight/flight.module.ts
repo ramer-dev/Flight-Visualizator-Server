@@ -6,13 +6,13 @@ import { FlightList } from "entities/flight-list.entity";
 import { ResultController } from "./result/result.controller";
 import { ResultService } from "./result/result.service";
 import { FlightResult } from "entities/flight-result.entity";
+import { FileModule } from "file/file.module";
 
 @Module({
     imports: [
         TypeOrmModule.forFeature(
             [FlightList, FlightResult]
-        )
-    ],
+        )],
     controllers: [ListController, ResultController],
     providers: [ListService, ResultService],
 })

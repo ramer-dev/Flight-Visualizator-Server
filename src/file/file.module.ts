@@ -7,11 +7,12 @@ import { FileService } from './file.service';
 
 @Module({
     imports: [
-        // MulterModule.registerAsync({
-        //     useFactory: multerOptionsFactory,
-        // }),
+        MulterModule.registerAsync({
+            useFactory: multerOptionsFactory,
+        }),
     ],
     controllers: [FileController],
     providers: [FileService],
+    exports:[FileService],
 })
 export class FileModule { }
