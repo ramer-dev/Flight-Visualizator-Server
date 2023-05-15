@@ -77,6 +77,9 @@ export class RouteService {
             throw e;
         }
 
+    }
 
+    async deleteRoute(id: number) {
+        return await this.routeListRepository.delete({ routeId: id });
     }
 }
