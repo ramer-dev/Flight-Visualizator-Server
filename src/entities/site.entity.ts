@@ -1,11 +1,32 @@
-import { Entity, PrimaryColumn, Column, Point } from 'typeorm';
+import { PointType } from 'common/dto/coordinate.types';
+import { Entity, PrimaryColumn, Column, Point, PrimaryGeneratedColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
 
 @Entity()
 export class Site {
-    @PrimaryColumn()
-    siteName : string;
+    @PrimaryGeneratedColumn()
+    siteId: number;
+
     @Column()
-    siteCoordinate : Point
+    siteName: string;
+    @Column({
+        type: 'point',
+        transformer: {
+            from: (value: string) => {
+                const [x, y] = value.replace(/[^\d .-]/g, '').trim().split(' ')
+                return { lat: +x, lng: +y };
+            },
+            to: (value: { lat: number, lng: number }) => {
+                return `POINT(${value.lat} ${value.lng})`
+            }
+        }
+    })
+    siteCoordinate: Point | PointType
     @Column()
-    siteType : string;
+    siteType: string;
+    
+    @UpdateDateColumn()
+    updatedAt: Date;
+
+    @DeleteDateColumn()
+    deletedAt: Date;
 }
