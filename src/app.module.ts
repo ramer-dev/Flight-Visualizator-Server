@@ -13,10 +13,12 @@ import { FixPointModule } from 'domain/fix-point/fix-point.module';
 import { SectorModule } from 'domain/sector/sector.module';
 import { AreaModule } from 'domain/area/area.module';
 import { RouteModule } from './domain/route/route.module';
+import { FrequencyModule } from './domain/frequency/frequency.module';
+import { SiteModule } from './domain/site/site.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User]),
-  FlightModule, FileModule, DBModule, LoginModule, NoticeModule, FixPointModule, SectorModule, AreaModule, RouteModule],
+  FlightModule, FileModule, DBModule, LoginModule, NoticeModule, FixPointModule, SectorModule, AreaModule, RouteModule, FrequencyModule, SiteModule],
   controllers: [AppController, UserController],
   providers: [AppService],
 })
