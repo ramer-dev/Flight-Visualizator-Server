@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Res } from "@nestjs/common";
+import { Controller, Get, HttpException, HttpStatus, Param, Res } from "@nestjs/common";
 import { ApiTags } from '@nestjs/swagger';
 import { InsertFrequencyDto } from 'common/dto/frequency/frequency.insert.dto';
 import { UpdateFrequencyDto } from 'common/dto/frequency/frequency.update.dto';
@@ -17,10 +17,16 @@ export class MapController {
     @Param('y') y: string,
     @Res() res: Response,
   ) {
-    const imagePath = join(process.cwd(), 'map', z, x, y + '.png');
+    const imagePath = join(process.cwd(), 'map', z, x);
 
-    const stream = fs.createReadStream(imagePath);
-    return stream.pipe(res);
-    // return this.mapService.getMap(z, x, y);
+    if (fs.existsSync(imagePath)) {
+      const filename = `\\${y}.png`
+      const stream = fs.createReadStream(imagePath + filename);
+      return stream.pipe(res);
+    }
+    throw new HttpException({
+      message: 'File Not Found',
+    },
+    HttpStatus.BAD_REQUEST)
   }
 }
