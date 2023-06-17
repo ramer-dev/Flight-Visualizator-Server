@@ -31,6 +31,7 @@ yarn-error.log
 
 # uploads
 /uploads
+/map
 
 # tests
 /test
