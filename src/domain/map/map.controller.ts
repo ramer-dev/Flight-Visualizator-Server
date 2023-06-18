@@ -17,16 +17,19 @@ export class MapController {
     @Param('y') y: string,
     @Res() res: Response,
   ) {
-    const imagePath = join(process.cwd(), 'map', z, x);
+    const imagePath = join(process.cwd(), 'map', z, x, y + '.png');
 
-    if (fs.existsSync(imagePath)) {
-      const filename = `\\${y}.png`
-      const stream = fs.createReadStream(imagePath + filename);
-      return stream.pipe(res);
+    // if (fs.existsSync(imagePath)) {
+    // const filename = `\\${y}.png`
+    // const stream = fs.createReadStream(imagePath + filename);
+    // return stream.pipe(res);
+    // console.log(imagePath);
+    if (fs.existsSync(imagePath)) res.sendFile(imagePath)
+    else {
+      throw new HttpException({
+        message: 'File Not Found',
+      },
+        HttpStatus.NO_CONTENT)
     }
-    throw new HttpException({
-      message: 'File Not Found',
-    },
-    HttpStatus.BAD_REQUEST)
   }
 }
