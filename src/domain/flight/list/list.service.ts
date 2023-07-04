@@ -18,7 +18,7 @@ export class ListService {
     ) { }
 
     async getAllList(): Promise<FlightList[]> {
-        const res = await this.listRepository.find();
+        const res = await this.listRepository.find({order:{id:'desc'}});
         this.log.log(`get all Lists: length:${res.length}`)
         return res;
     }

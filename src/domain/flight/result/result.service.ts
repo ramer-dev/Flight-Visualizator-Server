@@ -30,7 +30,7 @@ export class ResultService {
         const list = await this.listRepository.findOne({ where: { id } })
         if (!list) throw new NotFoundException();
 
-        const result = await this.resultRepository.find({ where: { testId: id }, skip, take })
+        const result = await this.resultRepository.find({ where: { testId: list.id }, skip, take })
         list.data = result;
         this.log.log(`get specific data of:${id} : ${result.length}EA`)
         return list;

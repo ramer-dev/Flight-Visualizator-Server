@@ -1,13 +1,18 @@
 import { PointType } from 'common/dto/coordinate.types';
 import { Entity, PrimaryColumn, Column, Point, PrimaryGeneratedColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 
 @Entity()
 export class Site {
+    @ApiPropertyOptional({example:1})
     @PrimaryGeneratedColumn()
     siteId: number;
 
+    @ApiProperty({example:"부안"})
     @Column()
     siteName: string;
+
+    @ApiProperty({example:{lat:0, lng:0}})
     @Column({
         type: 'point',
         transformer: {
@@ -21,11 +26,15 @@ export class Site {
         }
     })
     siteCoordinate: Point | PointType
+    @ApiProperty({example:"저고도"})
     @Column()
     siteType: string;
-    
+
+    @ApiProperty({example:new Date()})
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @ApiProperty({example:new Date()})
 
     @DeleteDateColumn()
     deletedAt: Date;
