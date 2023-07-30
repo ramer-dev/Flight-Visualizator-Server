@@ -13,6 +13,7 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies/snake-naming.stra
             database: 'backup',
             entities: ['entities/**/*.entity{.ts,.js}'],
             // synchronize: true,
+            legacySpatialSupport: false,
             autoLoadEntities:true,
             namingStrategy: new SnakeNamingStrategy(),
             logging:true
