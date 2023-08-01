@@ -14,7 +14,7 @@ export class NoticeService {
 
     }
     async getNotice(limit?: number, skip?: number) {
-        return this.noticeRepository.find({ skip, take: limit });
+        return this.noticeRepository.find({ skip, take: limit, order:{id: 'DESC'} });
     }
 
     async addNotice(body: InsertNoticeDto) {

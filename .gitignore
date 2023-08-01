@@ -46,3 +46,4 @@ dist/*
 
 .npmrc
 pnpm-lock.yaml
+dist.zip

@@ -13,7 +13,10 @@ export class SiteService {
     ) { }
 
     getEntireSite() {
-        return this.siteRepository.find();
+        return this.siteRepository.createQueryBuilder('site')
+        .orderBy('CASE site.siteType when :siteType1 then 1 when :siteType2 then 2 when :siteType3 then 3 else 4 end', 'ASC')
+        .setParameters({siteType1:'SITE', siteType2: 'LOWSITE', siteType3:'VORTAC'})
+        .getMany()
     }
 
     getSingleSite(id: number) {
