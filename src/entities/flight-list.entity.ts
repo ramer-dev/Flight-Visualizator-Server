@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Page } from 'common/class/page.class';
 import { Entity, PrimaryColumn, Column, OneToMany, JoinColumn, PrimaryGeneratedColumn, ManyToMany, JoinTable, UpdateDateColumn, DeleteDateColumn, CreateDateColumn } from 'typeorm';
 import { FlightResult } from './flight-result.entity';
 
@@ -36,6 +37,9 @@ export class FlightList {
     @DeleteDateColumn()
     deletedAt: Date | null;
 
-    @ApiProperty({type : [FlightResult]})
-    data: FlightResult[];
+    @ApiProperty({type : [Page<FlightResult>]})
+    data: Page<FlightResult>
+
+    // @ApiProperty({type : [Number]})
+    // count?: number
 }

@@ -8,6 +8,7 @@ import { SearchDto } from "common/dto/search.dto";
 import { FlightList } from "entities/flight-list.entity";
 import { FlightResult } from "entities/flight-result.entity";
 import { Between, Repository, Like } from "typeorm";
+import { Page } from "common/class/page.class";
 
 @Injectable()
 export class ResultService {
@@ -19,21 +20,22 @@ export class ResultService {
         private readonly listRepository: Repository<FlightList>,
     ) { }
 
-    async getAllResult(take: number, skip: number): Promise<FlightResult[]> {
-        const res = await this.resultRepository.find({ skip, take })
-        this.log.log(`get every data of flight result ${res.length}EA`)
+    async getAllResult(skip: number, take: number) {
+        // this.log.log(`get every data of flight result ${skip} ${take}`)
 
-        return res;
+        const [result, count] = await this.resultRepository.findAndCount({ skip, take })
+        this.log.log(`get every data of flight result ${result.length}EA ${skip} ${take}`)
+        return new Page(count, take, result)
     }
 
-    async getSpecificResult(id: number, take: number, skip: number): Promise<FlightList> {
+    async getSpecificResult(id: number, take: number, skip: number) {
         const list = await this.listRepository.findOne({ where: { id } })
         if (!list) throw new NotFoundException();
 
-        const result = await this.resultRepository.find({ where: { testId: list.id }, skip, take })
-        list.data = result;
-        this.log.log(`get specific data of:${id} : ${result.length}EA`)
-        return list;
+        const [result, count] = await this.resultRepository.findAndCount({ where: { testId: list.id }, skip, take })
+        this.log.log(`get specific data of:${id} : ${list.data.totalCount}EA`)
+        // list.data = [result, { count: count }]
+        return new Page(count, take, result)
     }
 
     async getSearchResult(body: SearchDto) {
@@ -86,17 +88,22 @@ export class ResultService {
         this.log.log(`post flight result rows : ${body.length}`)
     }
 
-    async updateFlightResult(id: number, body: UpdateFlightResultDto) {
-        await this.resultRepository.findOne({ where: { id } })
+    async updateFlightResult(body: UpdateFlightResultDto[]) {
+        // const items = await this.resultRepository.find({ where: { testId:body[0].testId } })
 
+        // const deleteItems = new Set(items.map(t => t.id))
+        // const filteredItems = body.filter(item => !deleteItems.has(item.id))
+        // console.log
         try {
-            await this.resultRepository.update(id, body)
+            await this.resultRepository.delete({ testId: body[0].testId })
+            await this.resultRepository.insert(body)
             // const a = await this.resultRepository.findOne({ where: { id } })
-            this.log.log(`updated flight result id : ${id}`)
+            // this.log.log(`updated flight result id : ${id}`)
         } catch (e) {
             console.error(e)
         }
-        return id;
+        return body.length;
+        // return id;
     }
 
     async deleteFlightResult(id: number[]) {

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Patch, UseGuards, Delete } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Patch, UseGuards, Delete, Query } from "@nestjs/common";
 import { ApiBadRequestResponse, ApiBody, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "common/auth/jwt.guard";
 import { Roles } from "common/auth/role.decorator";
@@ -19,8 +19,8 @@ export class ResultController {
     @Get()
     @ApiOperation({summary:"비행검사 결과 전체 조회", description:"비행검사 결과 전체 조회, 페이징 기능 있음"})
     @ApiOkResponse({type:[FlightResult], description:'비행검사 결과 전체 조회 성공'})
-    getFlightResultAll(@Body('name') name: string, @Body('limit') limit: number, @Body('page') page: number) {
-        return this.resultService.getAllResult(limit, page);
+    getFlightResultAll(@Query('skip') skip: number, @Query('take') take: number) {
+        return this.resultService.getAllResult(+skip, +take);
     }
 
     @Get('search')
@@ -53,14 +53,14 @@ export class ResultController {
         return this.resultService.addFlightResult(body);
     }
 
-    @Patch(':id')
+    @Patch()
     @ApiOperation({summary:"비행검사 결과 수정", description:"비행검사 결과 수정"})
     @ApiOkResponse({type:Number, description:"비행검사 결과 수정 성공"})
     @ApiBadRequestResponse({description:'body 형식이 올바르지 않음'})
     // @Roles(1)
     // @UseGuards(JwtAuthGuard, RolesGuard)
-    UpdateFlightResult(@Param('id') id: number, @Body() body: UpdateFlightResultDto) {
-        return this.resultService.updateFlightResult(id, body);
+    UpdateFlightResult(@Body() body: UpdateFlightResultDto[]) {
+        return this.resultService.updateFlightResult(body);
     }
 
     @Delete()

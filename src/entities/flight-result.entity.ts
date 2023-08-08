@@ -1,10 +1,11 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNumber, isNumber } from 'class-validator';
+import { PageRequest } from 'common/class/page.request.class';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
 
 
 @Entity()
-export class FlightResult {
+export class FlightResult extends PageRequest{
     @ApiPropertyOptional({example:0})
     @PrimaryGeneratedColumn()
     id: number;
@@ -61,4 +62,5 @@ export class FlightResult {
     @ApiPropertyOptional({example:'2023-00-00'})
     @DeleteDateColumn()
     deletedAt: Date;
+
 } 

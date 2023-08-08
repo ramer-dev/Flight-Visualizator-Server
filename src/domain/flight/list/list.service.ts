@@ -6,6 +6,7 @@ import { FlightResult } from 'entities/flight-result.entity';
 import { FlightResultFormDto } from 'common/dto/flight-result.form.dto';
 import { InsertFlightListDto } from 'common/dto/flight-list/flight-list.insert.dto';
 import { UpdateFlightListDto } from 'common/dto/flight-list/flight-list.update.dto';
+import { Page } from 'common/class/page.class';
 
 @Injectable()
 export class ListService {
@@ -18,18 +19,18 @@ export class ListService {
     ) { }
 
     async getAllList(): Promise<FlightList[]> {
-        const res = await this.listRepository.find({order:{id:'desc'}});
+        const res = await this.listRepository.find({ order: { id: 'desc' } });
         this.log.log(`get all Lists: length:${res.length}`)
         return res;
     }
 
-    async getOneItem(id: number): Promise<FlightList> {
+    async getOneItem(id: number) {
 
         const list = await this.listRepository.findOne({ where: { id } })
-        const result = await this.resultRepository.find({ where: { testId: id } })
-
-        list.data = result;
-
+        const [result, count] = await this.resultRepository.findAndCount({ where: { testId: id } })
+        
+        list.data = new Page(count, 0, result)
+        
         this.log.log(`get one flight Lists: name:${id}`)
         return list;
     }

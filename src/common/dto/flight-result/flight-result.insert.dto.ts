@@ -3,6 +3,10 @@ import { IsString, IsNumber, IsDate, IsOptional } from 'class-validator'
 
 export class InsertFlightResultDto {
     @ApiProperty({example:'부안'})
+    @IsNumber()
+    id: number;
+
+    @ApiProperty({example:'부안'})
     @IsString()
     siteName: string;
     
