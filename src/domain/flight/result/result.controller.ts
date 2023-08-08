@@ -38,7 +38,7 @@ export class ResultController {
     @ApiBadRequestResponse({description:'body 형식이 올바르지 않음'})
     @ApiNotFoundResponse({description:"ID를 찾을 수 없음"})
     getSpecificResult(@Param('id') id: number, @Body('limit') limit: number, @Body('page') page: number) {
-        return this.resultService.getSpecificResult(id, limit, page);
+        return this.resultService.getSpecificResult(id);
     }
 
 

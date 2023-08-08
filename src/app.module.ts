@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'entities/user.entity';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { DBModule } from './common/utils/db.options';
 import { FileModule } from './file/file.module';
 import { FlightModule } from 'domain/flight/flight.module';
@@ -33,7 +31,7 @@ import { MapModule } from 'domain/map/map.module';
     SiteModule,
     MapModule,
   ],
-  controllers: [AppController, UserController],
-  providers: [AppService],
+  controllers: [UserController],
+  providers: [],
 })
 export class AppModule {}

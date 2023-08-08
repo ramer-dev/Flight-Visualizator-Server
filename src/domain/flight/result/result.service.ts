@@ -28,16 +28,18 @@ export class ResultService {
         return new Page(count, take, result)
     }
 
-    async getSpecificResult(id: number, take: number, skip: number) {
+    async getSpecificResult(id: number) {
         const list = await this.listRepository.findOne({ where: { id } })
         if (!list) throw new NotFoundException();
 
-        const [result, count] = await this.resultRepository.findAndCount({ where: { testId: list.id }, skip, take })
+        const [result, count] = await this.resultRepository.findAndCount({ where: { testId: list.id } })
+        const page = new Page(count, 0, result);
+
+        list.data = page;
         this.log.log(`get specific data of:${id} : ${list.data.totalCount}EA`)
         // list.data = [result, { count: count }]
-        return new Page(count, take, result)
+        return list
     }
-
     async getSearchResult(body: SearchDto) {
         const { siteName, frequency, startDate, endDate, testName, score, angleStart, angleEnd, distanceStart, distanceEnd, heightStart, heightEnd } = body;
 
