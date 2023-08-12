@@ -1,6 +1,5 @@
 import { Body, Controller, Delete, Get, Logger, Param, Patch, Post, Query } from "@nestjs/common";
 import { ApiBadRequestResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
-import { JwtAuthGuard } from "common/auth/jwt.guard";
 import { Roles } from "common/auth/role.decorator";
 import { RolesGuard } from "common/auth/role.guard";
 import { InsertFlightListDto } from "common/dto/flight-list/flight-list.insert.dto";

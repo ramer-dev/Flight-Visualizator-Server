@@ -13,7 +13,6 @@ export class LoginController {
     @ApiOkResponse({ type: Number, description: "로그인 성공" })
     @ApiBadRequestResponse({ description: '아이디 비밀번호가 일치하지 않음' })
     async login(@Body('id') id: string, @Body('pw') pw: string, @Res() res: Response) {
-        console.log(id, pw)
         const result = await this.loginService.login(id, pw);
         res.setHeader('Authorization', 'Bearer '+ result.token)
             
@@ -45,6 +44,7 @@ export class LoginController {
         res.cookie('jwt', '', {
             maxAge:0
         })
+        console.log('logout)')
         return res.send({
             message: 'logout success'
         })

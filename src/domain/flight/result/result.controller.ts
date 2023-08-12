@@ -1,6 +1,5 @@
 import { Body, Controller, Get, Param, Post, Patch, UseGuards, Delete, Query } from "@nestjs/common";
 import { ApiBadRequestResponse, ApiBody, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
-import { JwtAuthGuard } from "common/auth/jwt.guard";
 import { Roles } from "common/auth/role.decorator";
 import { RolesGuard } from "common/auth/role.guard";
 import { InsertFlightResultDto } from "common/dto/flight-result/flight-result.insert.dto";
@@ -43,8 +42,8 @@ export class ResultController {
 
 
     @Post()
-    @Roles(1)
-    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(2)
+    @UseGuards(RolesGuard)
     @ApiOperation({summary:"비행검사 결과 추가", description:"비행검사 결과 추가"})
     @ApiOkResponse({type:Number, description:"비행검사 결과 추가 성공"})
     @ApiBadRequestResponse({description:'body 형식이 올바르지 않음'})
@@ -54,6 +53,8 @@ export class ResultController {
     }
 
     @Patch()
+    @Roles(2)
+    @UseGuards(RolesGuard)
     @ApiOperation({summary:"비행검사 결과 수정", description:"비행검사 결과 수정"})
     @ApiOkResponse({type:Number, description:"비행검사 결과 수정 성공"})
     @ApiBadRequestResponse({description:'body 형식이 올바르지 않음'})
@@ -64,6 +65,8 @@ export class ResultController {
     }
 
     @Delete()
+    @Roles(3)
+    @UseGuards(RolesGuard)
     @ApiOperation({summary:"비행검사 결과 삭제", description:"비행검사 결과 삭제"})
     @ApiOkResponse({type:Number, description:"비행검사 결과 삭제 성공"})
     @ApiNotFoundResponse({description:'id가 존재하지 않음'})

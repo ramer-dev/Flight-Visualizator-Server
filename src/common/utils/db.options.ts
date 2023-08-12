@@ -21,7 +21,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
             legacySpatialSupport: false,
             autoLoadEntities: true,
             namingStrategy: new SnakeNamingStrategy(),
-            logging: true
+            logging: false
         }
     }
 }

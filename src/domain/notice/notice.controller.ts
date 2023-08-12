@@ -1,7 +1,6 @@
 import { Body, Controller, Delete, Get, Logger, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { InjectRepository } from '@nestjs/typeorm';
-import { JwtAuthGuard } from 'common/auth/jwt.guard';
 import { Roles } from 'common/auth/role.decorator';
 import { RolesGuard } from 'common/auth/role.guard';
 import { InsertNoticeDto } from 'common/dto/notice/notice.insert.dto';
@@ -36,7 +35,7 @@ export class NoticeController {
 
     @Post()
     @Roles(2)
-    @UseGuards(JwtAuthGuard, RolesGuard)
+    @UseGuards(RolesGuard)
     @ApiOperation({ description: '공지사항 추가', summary: '공지사항 추가' })
     @ApiOkResponse({
         type: Number,
@@ -74,7 +73,7 @@ export class NoticeController {
 
     @Delete(':id')
     @Roles(3)
-    @UseGuards(JwtAuthGuard, RolesGuard)
+    @UseGuards(RolesGuard)
     @ApiOperation({ description: '공지사항 삭제', summary: '공지사항 삭제' })
     @ApiOkResponse({
         type: Number,
