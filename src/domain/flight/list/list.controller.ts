@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Logger, Param, Patch, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Logger, Param, Patch, Post, Query } from "@nestjs/common";
 import { ApiBadRequestResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "common/auth/jwt.guard";
 import { Roles } from "common/auth/role.decorator";
@@ -30,8 +30,8 @@ export class ListController {
     @ApiOperation({ summary: '비행검사 단일 조회', description: '비행검사 단일 항목 조회' })
     @ApiOkResponse({type:FlightList, description: '비행검사 단일 조회 성공'})
     @ApiNotFoundResponse({description:'해당하는 ID가 존재하지 않음'})
-    getOneItem(@Param('id') id : number) {
-        return this.listService.getOneItem(id);
+    getOneItem(@Param('id') id : number, @Query('p') page : number) {
+        return this.listService.getOneItem(id, page);
     }
 
     @Post()

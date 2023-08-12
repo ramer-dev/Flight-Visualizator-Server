@@ -1,7 +1,8 @@
 import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { Observable } from "rxjs";
-import { User } from "entities/user.entity";
+import { JwtService } from "@nestjs/jwt";
+import { Payload } from "./jwt.payload";
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -13,9 +14,13 @@ export class RolesGuard implements CanActivate {
             return true;
         }
         const request = context.switchToHttp().getRequest();
-        const user = request.user;
+        const jwtService = new JwtService()
 
-        return user.role >= roles
+        const token = request.cookies.jwt;
+
+        const {id, role, sub} = jwtService.decode(token) as Payload
+
+        return role >= roles
         
         // if(user.authority && user.authority >= roles){
         // }

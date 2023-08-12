@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config'
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'entities/user.entity';
-import { DBModule } from './common/utils/db.options';
+import { TypeOrmConfigService } from './common/utils/db.options';
 import { FileModule } from './file/file.module';
 import { FlightModule } from 'domain/flight/flight.module';
 import { LoginModule } from './login/login.module';
@@ -14,13 +15,20 @@ import { RouteModule } from 'domain/route/route.module';
 import { FrequencyModule } from 'domain/frequency/frequency.module';
 import { SiteModule } from 'domain/site/site.module';
 import { MapModule } from 'domain/map/map.module';
+import configuration from 'config/configuration';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
+    ConfigModule.forRoot({ isGlobal:true, envFilePath: `.development.env` }),
+    TypeOrmModule.forRootAsync({
+      // useFactory: (config: ConfigService) => ({
+      //    database: config.get<string>('')
+      // }),
+      useClass: TypeOrmConfigService,
+      inject:[LoginModule]
+    }),
     FlightModule,
     FileModule,
-    DBModule,
     LoginModule,
     NoticeModule,
     FixPointModule,
@@ -34,4 +42,4 @@ import { MapModule } from 'domain/map/map.module';
   controllers: [UserController],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }

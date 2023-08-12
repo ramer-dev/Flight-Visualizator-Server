@@ -20,12 +20,25 @@ export class ResultService {
         private readonly listRepository: Repository<FlightList>,
     ) { }
 
-    async getAllResult(skip: number, take: number) {
-        // this.log.log(`get every data of flight result ${skip} ${take}`)
+    async getAllResult(/*skip: number,*/ take: number) {
+        this.log.log(`get every data of flight result ${take}`)
+        const a : FlightList = {
+            id: -1,
+            testName: "Search",
+            testDate: undefined,
+            testType: "",
+            testRoute: "",
+            userId: "",
+            updatedAt: undefined,
+            deletedAt: undefined,
+            data: undefined
+        }
+        const [result, count] = await this.resultRepository.findAndCount()
 
-        const [result, count] = await this.resultRepository.findAndCount({ skip, take })
-        this.log.log(`get every data of flight result ${result.length}EA ${skip} ${take}`)
-        return new Page(count, take, result)
+        a.data = new Page(count, take, result)
+        
+        this.log.log(`get every data of flight result ${result.length}EA  ${take}`)
+        return a;
     }
 
     async getSpecificResult(id: number) {
@@ -33,7 +46,7 @@ export class ResultService {
         if (!list) throw new NotFoundException();
 
         const [result, count] = await this.resultRepository.findAndCount({ where: { testId: list.id } })
-        const page = new Page(count, 0, result);
+        const page = new Page(count, 100, result);
 
         list.data = page;
         this.log.log(`get specific data of:${id} : ${list.data.totalCount}EA`)

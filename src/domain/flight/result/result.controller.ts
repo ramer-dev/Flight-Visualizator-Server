@@ -19,8 +19,8 @@ export class ResultController {
     @Get()
     @ApiOperation({summary:"비행검사 결과 전체 조회", description:"비행검사 결과 전체 조회, 페이징 기능 있음"})
     @ApiOkResponse({type:[FlightResult], description:'비행검사 결과 전체 조회 성공'})
-    getFlightResultAll(@Query('skip') skip: number, @Query('take') take: number) {
-        return this.resultService.getAllResult(+skip, +take);
+    getFlightResultAll(/*@Query('skip') skip: number,*/ @Query('take') take: number) {
+        return this.resultService.getAllResult(+take);
     }
 
     @Get('search')
@@ -43,8 +43,8 @@ export class ResultController {
 
 
     @Post()
-    // @Roles(1)
-    // @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(1)
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @ApiOperation({summary:"비행검사 결과 추가", description:"비행검사 결과 추가"})
     @ApiOkResponse({type:Number, description:"비행검사 결과 추가 성공"})
     @ApiBadRequestResponse({description:'body 형식이 올바르지 않음'})
