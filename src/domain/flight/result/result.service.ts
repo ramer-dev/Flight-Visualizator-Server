@@ -7,8 +7,9 @@ import { FlightResultFormDto } from "common/dto/flight-result.form.dto";
 import { SearchDto } from "common/dto/search.dto";
 import { FlightList } from "entities/flight-list.entity";
 import { FlightResult } from "entities/flight-result.entity";
-import { Between, Repository, Like } from "typeorm";
+import { Between, Repository, Like, Point } from "typeorm";
 import { Page } from "common/class/page.class";
+import { PointType } from "common/dto/coordinate.types";
 
 @Injectable()
 export class ResultService {
@@ -22,7 +23,7 @@ export class ResultService {
 
     async getAllResult(/*skip: number,*/ take: number) {
         this.log.log(`get every data of flight result ${take}`)
-        const a : FlightList = {
+        const a: FlightList = {
             id: -1,
             testName: "Search",
             testDate: undefined,
@@ -36,7 +37,7 @@ export class ResultService {
         const [result, count] = await this.resultRepository.findAndCount()
 
         a.data = new Page(count, take, result)
-        
+
         this.log.log(`get every data of flight result ${result.length}EA  ${take}`)
         return a;
     }
@@ -104,19 +105,12 @@ export class ResultService {
     }
 
     async updateFlightResult(body: UpdateFlightResultDto[]) {
-        // const items = await this.resultRepository.find({ where: { testId:body[0].testId } })
 
-        // const deleteItems = new Set(items.map(t => t.id))
-        // const filteredItems = body.filter(item => !deleteItems.has(item.id))
-        // console.log
-        try {
-            await this.resultRepository.delete({ testId: body[0].testId })
-            await this.resultRepository.insert(body)
-            // const a = await this.resultRepository.findOne({ where: { id } })
-            // this.log.log(`updated flight result id : ${id}`)
-        } catch (e) {
-            console.error(e)
-        }
+        await this.resultRepository.delete({ testId: body[0].testId })
+        await this.resultRepository.insert(body)
+        // const a = await this.resultRepository.findOne({ where: { id } })
+        // this.log.log(`updated flight result id : ${id}`)
+
         return body.length;
         // return id;
     }
@@ -124,5 +118,17 @@ export class ResultService {
     async deleteFlightResult(id: number[]) {
         await this.resultRepository.softDelete(id);
         this.log.log(`deleted flight result id : ${id}`)
+    }
+    
+    async updateCoordData(body:UpdateFlightResultDto, id:number) {
+        this.log.log(`updated flight result id : ${id}`)
+        this.log.log(body.siteName)
+        // this.log.log(`lat ${body?.point?.lat} | lng ${body?.point.lng}`)
+        await this.resultRepository.createQueryBuilder().update(FlightResult).set(body).where({id}).execute();
+    }
+
+    async findPointsWithinRadius(point: PointType, radius: number) {
+        const result = await this.resultRepository.createQueryBuilder().where(`ST_DISTANCE(point, POINT(:lat, :lng)) * 111133 <= :radius * 1000`, {lat: point.lat, lng: point.lng, radius:radius}).getMany()
+        return result;
     }
 }

@@ -1,7 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNumber, isNumber } from 'class-validator';
 import { PageRequest } from 'common/class/page.request.class';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
+import { PointType } from 'common/dto/coordinate.types';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, UpdateDateColumn, DeleteDateColumn, Point } from 'typeorm';
 
 
 @Entity()
@@ -63,4 +64,21 @@ export class FlightResult extends PageRequest{
     @DeleteDateColumn()
     deletedAt: Date;
 
+    
+    @ApiPropertyOptional({ example: { lat: 0, lng: 0 } })
+    @Column({
+        type: 'point',
+        srid:4326,
+        transformer: {
+            from: (value: string) => { 
+                if(!value) {return null}
+                const [x, y] = value.replace(/[^\d .-]/g, '').trim().split(' ')
+                return { lat: +x, lng: +y };
+            },
+            to: (value: { lat: number, lng: number }) => {
+                return `POINT(${value.lat} ${value.lng})`
+            }
+        }
+    })
+    point: Point | PointType ;
 } 

@@ -12,6 +12,7 @@ export class Sector {
 
     @Column({
         type: 'polygon',
+        srid:4326,
         transformer: {
             from: (value: string) => {
                 const result = value.replace(/[^\d .,-]/g, '').trim().split(',').map(t => {

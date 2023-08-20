@@ -1,5 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsNumber, IsDate, IsOptional } from 'class-validator'
+import { Type } from 'class-transformer';
+import { IsString, IsNumber, IsDate, IsOptional, IsObject, IsNotEmptyObject, ValidateNested } from 'class-validator'
+import { PointType } from '../coordinate.types';
 
 export class InsertFlightResultDto {
     @ApiProperty({example:'부안'})
@@ -50,4 +52,25 @@ export class InsertFlightResultDto {
     @IsNumber()
     @IsOptional()
     height: number;
+
+    // @IsDate()
+    // @IsOptional()
+    // deletedAt: Date;
+
+    // @IsDate()
+    // @IsOptional()
+    // updatedAt: Date;
+
+    // @IsNumber()
+    // @IsOptional()
+    // status: number;
+
+    @ApiProperty({ example: { lat: 123, lng: 123 } })
+    @IsObject()
+    // @IsDefined()
+    @IsNotEmptyObject()
+    @ValidateNested()
+    @Type(() => PointType)
+    point: PointType;
+
 }

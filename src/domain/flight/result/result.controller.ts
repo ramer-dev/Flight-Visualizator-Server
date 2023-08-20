@@ -8,6 +8,7 @@ import { FlightResultFormDto } from "common/dto/flight-result.form.dto";
 import { SearchDto } from "common/dto/search.dto";
 import { FlightResult } from "entities/flight-result.entity";
 import { ResultService } from "./result.service";
+import { PointType } from "common/dto/coordinate.types";
 
 
 @Controller('flight/result')
@@ -30,6 +31,13 @@ export class ResultController {
         return this.resultService.getSearchResult(body);
     }
 
+    @Get('nearby')
+    @ApiOperation({summary:"비행검사 좌표 분석", description:"비행검사 결과 삭제"})
+    @ApiOkResponse({type:Number, description:"비행검사 결과 삭제 성공"})
+    @ApiNotFoundResponse({description:'id가 존재하지 않음'})
+    findPointsWithinRadius(@Body('point') point: PointType, @Body('distance') distance: number) {
+        return this.resultService.findPointsWithinRadius(point, distance);
+    }
 
     @Get(':id')
     @ApiOperation({summary:"비행검사 결과 단일 조회", description:"비행검사 testID에 해당하는 결과 조회"})
@@ -58,10 +66,18 @@ export class ResultController {
     @ApiOperation({summary:"비행검사 결과 수정", description:"비행검사 결과 수정"})
     @ApiOkResponse({type:Number, description:"비행검사 결과 수정 성공"})
     @ApiBadRequestResponse({description:'body 형식이 올바르지 않음'})
-    // @Roles(1)
-    // @UseGuards(JwtAuthGuard, RolesGuard)
     UpdateFlightResult(@Body() body: UpdateFlightResultDto[]) {
         return this.resultService.updateFlightResult(body);
+    }
+
+    @Patch(':id')
+    @Roles(2)
+    @UseGuards(RolesGuard)
+    @ApiOperation({summary:"비행검사 결과 수정", description:"비행검사 결과 수정"})
+    @ApiOkResponse({type:Number, description:"비행검사 결과 수정 성공"})
+    @ApiBadRequestResponse({description:'body 형식이 올바르지 않음'})
+    UpdateCoordData(@Body() body: UpdateFlightResultDto, @Param('id') id:number) {
+        return this.resultService.updateCoordData(body, id);
     }
 
     @Delete()
@@ -75,4 +91,5 @@ export class ResultController {
     DeleteFlightResult(@Body('id') id : number[]) {
         return this.resultService.deleteFlightResult(id)
     }
+
 }

@@ -15,6 +15,7 @@ export class FixPoint {
     @ApiProperty({ example: { lat: 0, lng: 0 } })
     @Column({
         type: 'point',
+        srid:4326,
         transformer: {
             from: (value: string) => { 
                 const [x, y] = value.replace(/[^\d .-]/g, '').trim().split(' ')
