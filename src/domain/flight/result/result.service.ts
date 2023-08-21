@@ -105,9 +105,10 @@ export class ResultService {
     }
 
     async updateFlightResult(body: UpdateFlightResultDto[]) {
-
-        await this.resultRepository.delete({ testId: body[0].testId })
-        await this.resultRepository.insert(body)
+        if (body.length) {
+            await this.resultRepository.delete({ testId: body[0].testId })
+            await this.resultRepository.insert(body)
+        }
         // const a = await this.resultRepository.findOne({ where: { id } })
         // this.log.log(`updated flight result id : ${id}`)
 
@@ -119,16 +120,17 @@ export class ResultService {
         await this.resultRepository.softDelete(id);
         this.log.log(`deleted flight result id : ${id}`)
     }
-    
-    async updateCoordData(body:UpdateFlightResultDto, id:number) {
+
+    async updateCoordData(body: UpdateFlightResultDto, id: number) {
         this.log.log(`updated flight result id : ${id}`)
         this.log.log(body.siteName)
         // this.log.log(`lat ${body?.point?.lat} | lng ${body?.point.lng}`)
-        await this.resultRepository.createQueryBuilder().update(FlightResult).set(body).where({id}).execute();
+        await this.resultRepository.createQueryBuilder().update(FlightResult).set(body).where({ id }).execute();
     }
 
     async findPointsWithinRadius(point: PointType, radius: number) {
-        const result = await this.resultRepository.createQueryBuilder().where(`ST_DISTANCE(point, POINT(:lat, :lng)) * 111133 <= :radius * 1000`, {lat: point.lat, lng: point.lng, radius:radius}).getMany()
+        this.log.log(`updated flight result id : ${point.lat} ${point.lng}, ${radius}`)
+        const result = await this.resultRepository.createQueryBuilder().where(`ST_DISTANCE(point, POINT(:lat, :lng)) * 111133 <= :radius * 1000`, { lat: point.lat, lng: point.lng, radius: radius }).getMany()
         return result;
     }
 }

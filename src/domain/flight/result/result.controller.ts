@@ -31,7 +31,7 @@ export class ResultController {
         return this.resultService.getSearchResult(body);
     }
 
-    @Get('nearby')
+    @Post('nearby')
     @ApiOperation({summary:"비행검사 좌표 분석", description:"비행검사 결과 삭제"})
     @ApiOkResponse({type:Number, description:"비행검사 결과 삭제 성공"})
     @ApiNotFoundResponse({description:'id가 존재하지 않음'})

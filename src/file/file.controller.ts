@@ -1,6 +1,8 @@
 import {
     Controller,
+    Get,
     Post,
+    Query,
     UploadedFile,
     UploadedFiles,
     UseInterceptors,
@@ -22,8 +24,8 @@ export class FileController {
     @UseInterceptors(FileInterceptor('file', {
         fileFilter: (req, file, cb) => {
             // const ext = file.filename.split('.').pop()
-            if (!file.originalname.match(/\.(txt)$/g)){
-                return cb(new Error('txt 파일만 허용됩니다.'), false)
+            if (!file.originalname.match(/\.(txt|csv)$/g)){
+                return cb(new Error('txt 또는 csv 파일만 허용됩니다.'), false)
             }
             cb(null, true);
         }
@@ -33,6 +35,12 @@ export class FileController {
         file: Express.Multer.File
     ) {
         return this.fileService.uploadRouteFile(file);
+    }
+
+    @Get('route')
+    @ApiOperation({ summary: '경로 Parse API', description: "경로를 전달한다." })
+    getRouteFromFile(@Query('filename') filename : string) {
+        return this.fileService.getRouteFromFile(filename)
     }
 
     @Post('ocr')
