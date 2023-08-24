@@ -129,8 +129,11 @@ export class ResultService {
     }
 
     async findPointsWithinRadius(point: PointType, radius: number) {
-        this.log.log(`updated flight result id : ${point.lat} ${point.lng}, ${radius}`)
-        const result = await this.resultRepository.createQueryBuilder().where(`ST_DISTANCE(point, POINT(:lat, :lng)) * 111133 <= :radius * 1000`, { lat: point.lat, lng: point.lng, radius: radius }).getMany()
+        this.log.log(`find points near by : ${point.lat} ${point.lng}, ${radius}km`)
+        
+        const result = await this.resultRepository.createQueryBuilder()
+        .where(`ST_DISTANCE(point, POINT(:lat, :lng)) * 111133 <= :radius * 1000`, { lat: point.lat, lng: point.lng, radius: radius })
+        .getMany()
         return result;
     }
 }
