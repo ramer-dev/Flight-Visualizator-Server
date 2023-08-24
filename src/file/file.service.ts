@@ -5,14 +5,14 @@ import xlsx from 'xlsx'
 @Injectable()
 
 export class FileService {
-    COORDINATE_ERROR_VARIANT = 0.15;
+    COORDINATE_ERROR_VARIANT = 0.25;
 
     log = new Logger('FileService');
+    
     uploadRouteFile(file: Express.Multer.File) {
         if (!file) {
             throw new BadRequestException('파일이 존재하지 않습니다..');
         }
-
         this.log.log(`file Uploaded fileName: ${file.filename}`)
         return { filePath: file.filename };
     }
@@ -32,6 +32,8 @@ export class FileService {
             case 'xls':
             case 'xlsx':
                 return this.parseExcel(filename);
+            default:
+                throw new BadRequestException('파일 에러')
         }
     }
 
@@ -56,27 +58,29 @@ export class FileService {
     }
 
     private parseExcel(filename: string) {
-        console.time('측정 시작')
-        const workbook = xlsx.readFile(`./uploads/route/${filename}`, { type: 'binary' });
+        const workbook = xlsx.readFile(`./uploads/route/${filename}`);
         const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-
-        console.timeEnd('측정 시작')
-
+        // const header = xlsx.utils.sheet_to_json(firstSheet, {range:3})
         const data = [];
         let lastLat = null;
         let lastLng = null;
-
+        let hasSkipped = false;
+        // 간단한 파일 확인
+        if (!(firstSheet['E4'].v === 'LAT' && firstSheet['F4'].v === 'LON')) {
+            throw new BadRequestException('잘못된 엑셀 파일 형식입니다.')
+        }
 
         for (const i of Object.keys(firstSheet)) {
             const cellValue = firstSheet[i].v;
             if (!cellValue || !cellValue.substring) { continue }
 
             const numberParts = cellValue.substring(1).split(' : ').map(Number)
-            const numberValue = Number((numberParts[0] + numberParts[1] / 100 + numberParts[2] / 10000).toFixed(4))
+            const numberValue = Number((numberParts[0] + numberParts[1] / 100 + numberParts[2] / 10000).toFixed(6))
             switch (i[0]) {
                 case 'E':
                     const currentLat = this.convertToWGS(numberValue);
                     if (lastLat !== null && Math.abs(lastLat - currentLat) > this.COORDINATE_ERROR_VARIANT) {
+                        hasSkipped = true;
                         continue;
                     }
                     lastLat = currentLat;
@@ -84,6 +88,7 @@ export class FileService {
                 case 'F':
                     const currentLng = this.convertToWGS(numberValue);
                     if (lastLng !== null && Math.abs(lastLng - currentLng) > this.COORDINATE_ERROR_VARIANT) {
+                        hasSkipped = true;
                         continue;
                     }
                     lastLng = currentLng;
@@ -108,11 +113,19 @@ export class FileService {
     async parseText(filename: string) {
         const textFile = await fs.readFileSync(`./uploads/route/${filename}`, 'utf-8')
         const rawData = textFile.split('\n').map(t => t.split(/\s+/).filter(a => a !== ''));
-        const data = {route:[]}
+        const data = { route: [] }
         let lastLat = null;
         let lastLng = null;
+        let skip = false;
+        // 간단한 파일 확인
+        if (!(rawData[0][7] === 'LAT' && rawData[0][8] === 'LON')) {
+            throw new BadRequestException('잘못된 TXT 파일 형식입니다.')
+        }
+        if(rawData.length > 500) skip = true;
 
+        
         for (let row of rawData) {
+
             for (let i = 8; i < 10; i++) {
                 switch (i) {
                     // 고도
@@ -133,11 +146,16 @@ export class FileService {
 
                 }
             }
-            if(lastLat && lastLng)
-                data.route.push({coords:{lat:Number(lastLat.toFixed(8)), lng:Number(lastLng.toFixed(8))}, height:+row[7]})
+            if (lastLat && lastLng)
+                data.route.push({ coords: { lat: Number(lastLat.toFixed(8)), lng: Number(lastLng.toFixed(8)) }, height: +row[7] })
         }
         // const data = rawData.map(row => { return { height: row[7], coords: [row[8], row[9]] } }).splice(1)
+
+        if(skip) {
+            data.route = data.route.filter((t, i) => i % 2 === 0)
+        }
         data['length'] = data.route.length;
+
         return data;
     }
 

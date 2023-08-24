@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { BadRequestException, Logger } from '@nestjs/common';
 import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
 import multer from 'multer';
 import path from 'path';
@@ -28,9 +28,11 @@ export const multerOptionsFactory = (): MulterOptions => {
                 
                 if (file.mimetype === 'image/png' || file.mimetype === 'application/pdf') {
                     done(null, path.join(process.cwd(), 'uploads/ocr'));
-                } else if (file.mimetype === 'text/plain') {
+                } else if (file.mimetype === 'text/plain' || file.mimetype === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
+                || file.mimetype === 'text/csv' || file.mimetype === 'application/vnd.ms-excel') {
                     done(null, path.join(process.cwd(), 'uploads/route'))
                 } else {
+                    throw new BadRequestException(`${file.mimetype} is not supported type.`)
                     done({
                         name: "Type Exception",
                         message: `${file.mimetype} type is unknown`
