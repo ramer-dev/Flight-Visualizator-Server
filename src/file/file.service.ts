@@ -5,6 +5,8 @@ import xlsx from 'xlsx'
 @Injectable()
 
 export class FileService {
+    COORDINATE_ERROR_VARIANT = 0.15;
+
     log = new Logger('FileService');
     uploadRouteFile(file: Express.Multer.File) {
         if (!file) {
@@ -64,7 +66,6 @@ export class FileService {
         let lastLat = null;
         let lastLng = null;
 
-        const COORDINATE_ERROR_VARIANT = 0.25;
 
         for (const i of Object.keys(firstSheet)) {
             const cellValue = firstSheet[i].v;
@@ -75,14 +76,14 @@ export class FileService {
             switch (i[0]) {
                 case 'E':
                     const currentLat = this.convertToWGS(numberValue);
-                    if (lastLat !== null && Math.abs(lastLat - currentLat) > COORDINATE_ERROR_VARIANT) {
+                    if (lastLat !== null && Math.abs(lastLat - currentLat) > this.COORDINATE_ERROR_VARIANT) {
                         continue;
                     }
                     lastLat = currentLat;
                     break;
                 case 'F':
                     const currentLng = this.convertToWGS(numberValue);
-                    if (lastLng !== null && Math.abs(lastLng - currentLng) > COORDINATE_ERROR_VARIANT) {
+                    if (lastLng !== null && Math.abs(lastLng - currentLng) > this.COORDINATE_ERROR_VARIANT) {
                         continue;
                     }
                     lastLng = currentLng;
@@ -107,15 +108,37 @@ export class FileService {
     async parseText(filename: string) {
         const textFile = await fs.readFileSync(`./uploads/route/${filename}`, 'utf-8')
         const rawData = textFile.split('\n').map(t => t.split(/\s+/).filter(a => a !== ''));
-        const data = []
-        const currentLat = null;
-        const currentLng = null;
+        const data = {route:[]}
+        let lastLat = null;
+        let lastLng = null;
 
-        for (let row of rawData){
-            if(currentLat !== null)
+        for (let row of rawData) {
+            for (let i = 8; i < 10; i++) {
+                switch (i) {
+                    // 고도
+                    case 8:
+                        const currentLat = +row[i]
+                        if (lastLat !== null && Math.abs(lastLat - currentLat) > this.COORDINATE_ERROR_VARIANT) {
+                            continue;
+                        }
+                        lastLat = currentLat;
+                        break;
+                    case 9:
+                        const currentLng = +row[i]
+                        if (lastLng !== null && Math.abs(lastLng - currentLng) > this.COORDINATE_ERROR_VARIANT) {
+                            continue;
+                        }
+                        lastLng = currentLng;
+                        break;
+
+                }
+            }
+            if(lastLat && lastLng)
+                data.route.push({coords:{lat:Number(lastLat.toFixed(8)), lng:Number(lastLng.toFixed(8))}, height:+row[7]})
         }
         // const data = rawData.map(row => { return { height: row[7], coords: [row[8], row[9]] } }).splice(1)
-        return data
+        data['length'] = data.route.length;
+        return data;
     }
 
     private convertToWGS(coord: number) {
