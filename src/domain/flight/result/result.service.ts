@@ -123,7 +123,6 @@ export class ResultService {
 
     async updateCoordData(body: UpdateFlightResultDto, id: number) {
         this.log.log(`updated flight result id : ${id}`)
-        this.log.log(body.siteName)
         // this.log.log(`lat ${body?.point?.lat} | lng ${body?.point.lng}`)
         await this.resultRepository.createQueryBuilder().update(FlightResult).set(body).where({ id }).execute();
     }

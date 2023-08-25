@@ -76,9 +76,10 @@ export class FlightResult extends PageRequest{
                 return { lat: +x, lng: +y };
             },
             to: (value: { lat: number, lng: number }) => {
-                return `POINT(${value.lat} ${value.lng})`
+                if(value) return `POINT(${value.lat} ${value.lng})`
+                else return undefined
             }
         }
     })
-    point: Point | PointType ;
+    point?: Point | PointType ;
 } 

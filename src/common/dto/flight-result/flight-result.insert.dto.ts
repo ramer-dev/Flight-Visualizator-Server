@@ -66,11 +66,12 @@ export class InsertFlightResultDto {
     // status: number;
 
     @ApiProperty({ example: { lat: 123, lng: 123 } })
+    @IsOptional()
     @IsObject()
     // @IsDefined()
     @IsNotEmptyObject()
     @ValidateNested()
     @Type(() => PointType)
-    point: PointType;
+    point?: PointType;
 
 }
