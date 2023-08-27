@@ -32,8 +32,8 @@ export class Sector {
     })
     sectorData: PointType[];
 
-    // @Column()
-    // sectorAreaId: number;
+    @Column()
+    sectorAreaId: number;
 
     @ManyToOne(() => Area, {eager:true})
     @JoinColumn({name: 'sector_area_id', referencedColumnName:'areaId'})

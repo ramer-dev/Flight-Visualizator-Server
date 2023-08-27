@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { InsertFrequencyDto } from "common/dto/frequency/frequency.insert.dto";
 import { UpdateFrequencyDto } from "common/dto/frequency/frequency.update.dto";
@@ -7,6 +7,8 @@ import { Repository } from "typeorm";
 
 @Injectable()
 export class FrequencyService {
+    log = new Logger('FrequencyService')
+
     constructor(
         @InjectRepository(Frequency)
         private readonly freqRepository: Repository<Frequency>,
@@ -25,7 +27,8 @@ export class FrequencyService {
     }
 
     updateFreq(id: number, body: UpdateFrequencyDto) {
-        return this.freqRepository.update(id, body);
+        this.log.log(`주파수 업데이트 ${id}`)
+        return this.freqRepository.update({frequencyId:id}, body);
     }
 
     deleteFreq(id: number) {
