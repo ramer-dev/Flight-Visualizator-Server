@@ -3,7 +3,6 @@ import { IsNumber, IsOptional, IsString } from "class-validator";
 
 export class RouteBaseDto {
     @ApiProperty({ example: 1 })
-    // @IsOptional()
     @IsString()
     routeName: string;
     // @PrimaryColumn()
@@ -13,6 +12,7 @@ export class RouteBaseDto {
     routePoint: string
 
     @IsNumber()
+    @IsOptional()
     routeEntry: number;
 
     // @IsOptional()
