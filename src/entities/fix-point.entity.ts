@@ -17,11 +17,14 @@ export class FixPoint {
         type: 'point',
         srid:4326,
         transformer: {
-            from: (value: string) => { 
+            from: (value: string) => {
+                if(!value) return null;
                 const [x, y] = value.replace(/[^\d .-]/g, '').trim().split(' ')
                 return { lat: +x, lng: +y };
             },
             to: (value: { lat: number, lng: number }) => {
+                if(!value) return null;
+
                 return `POINT(${value.lat} ${value.lng})`
             }
         }
