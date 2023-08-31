@@ -27,7 +27,7 @@ export class RouteController {
     }
 
     @Patch(':id')
-    updateRoute(@Param('id') id: number, @Body() body: UpdateRouteListDto) {
+    updateRoute(@Param('id') id: number, @Body() body: InsertRouteListDto) {
         return this.routeService.updateRoute(id, body);
     }
 

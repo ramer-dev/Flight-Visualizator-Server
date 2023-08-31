@@ -30,12 +30,15 @@ export class RouteService {
     // 1. list data를 insert
     // 2. entry data insert
     async addSingleRoute(body: InsertRouteListDto) {
+        this.log.log(`POST new route | routename : ${body.routeName}`)
         const { routeName } = body;
 
         const routeData = body.routeData.map((t, i) => {
-            t.routeName = routeName;
-            t.routeEntry = i + 1;
-            return t
+            return {
+                routePoint:t.routeName,
+                routeName: routeName,
+                routeEntry: i + 1
+            }
         })
 
         if (await this.routeListRepository.findOne({ where: { routeName } })) {
@@ -46,20 +49,27 @@ export class RouteService {
         return await this.routeRepository.insert(routeData)
     }
 
-    async updateRoute(id: number, body: UpdateRouteListDto) {
-        const { routeId, routeName } = body;
+    async updateRoute(id: number, body: InsertRouteListDto) {
+        this.log.log(`PATCH new route | routeID : ${id}`)
+        // route에서 routeID가 id와 같은 경우 삭제
+        // routeList body에 맞게 update
+        // route 정보 업데이트 
+        const { routeName } = body;
         const findById = await this.routeListRepository.findOne({ where: { routeId: id } });
         const findByName = await this.routeListRepository.findOne({ where: { routeName } });
-
         const routeData = body.routeData.map((t, i) => {
-            t.routeName = routeName;
-            t.routeEntry = i + 1;
-            return t;
+            return {
+                routePoint:t.routeName,
+                routeName: routeName,
+                routeEntry: i + 1
+            }
         })
+
+
 
         const updateFunc = async () => {
             await this.routeRepository.delete({ routeName: findById.routeName });
-            await this.routeListRepository.update(id, { routeId, routeName });
+            await this.routeListRepository.update(id, { routeId: id, routeName });
             return await this.routeRepository.insert(routeData);
         }
 
@@ -67,10 +77,13 @@ export class RouteService {
 
         try {
             if (findByName) {
+                this.log.log(`found name: ${findByName}`)
                 // 찾은 결과가 있고 ID가 다른 경우 (중복), 
                 if (findByName.routeId !== id) {
+                    this.log.log(`Conflict name ${findByName.routeId}`)
                     throw new ConflictException('중복된 이름입니다.')
                 } else {
+                    // this.log.log(`Conflict name ${findByName.routeId}`)
                     return await updateFunc();
                 }
             } else {
