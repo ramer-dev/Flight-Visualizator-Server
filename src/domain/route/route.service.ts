@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from "@nestjs/common";
+import { ConflictException, Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { InsertRouteListDto } from "common/dto/route/route-list.insert.dto";
 import { UpdateRouteListDto } from "common/dto/route/route-list.update.dto";
@@ -9,6 +9,7 @@ import { Repository } from "typeorm";
 
 @Injectable()
 export class RouteService {
+    log = new Logger('RouteService');
     constructor(
         @InjectRepository(Route)
         private readonly routeRepository: Repository<Route>,
@@ -17,11 +18,13 @@ export class RouteService {
     ) { }
 
     getEntireRoute() {
-        return this.routeListRepository.find({ relations: ['routeData', 'routeData.routePointData'] });
+        this.log.log('GET entire route')
+        return this.routeListRepository.find({ relations: ['routeData', 'routeData.routePointData'], order: { routeData: { routeEntry: 'ASC' } } });
     }
 
     getSingleRoute(id: number) {
-        return this.routeListRepository.findOne({ where: { routeId: id }, relations: ['routeData', 'routeData.routePointData'] });
+        this.log.log(`GET single ${id} route`)
+        return this.routeListRepository.findOne({ where: { routeId: id }, relations: ['routeData', 'routeData.routePointData'], order: { routeData: { routeEntry: 'ASC' } } });
     }
 
     // 1. list data를 insert
