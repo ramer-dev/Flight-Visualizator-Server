@@ -24,16 +24,18 @@ export class SectorService {
         return this.sectorRepository.find({ relations: ['sectorArea'] });
     }
 
-    createSector(body: InsertSectorDto) {
-        return this.sectorRepository.insert(body);
+    async createSector(body: InsertSectorDto) {
+        const finder = await this.sectorRepository.findOne({ where: { sectorName: body.sectorName }})
+
+        if(finder){
+            throw new ConflictException('중복된 이름입니다.')
+        } else {
+            return await this.sectorRepository.insert(body);
+        }
     }
 
     async updateSector(id: number, body: UpdateSectorDto) {
-        if(!await this.sectorRepository.findOne({ where: { sectorName: body.sectorName }})){
-            return this.sectorRepository.update(id, body);
-        } else {
-            throw new ConflictException('중복된 이름입니다.')
-        }
+        return this.sectorRepository.update({id}, body);
     }
 
     deleteSector(id: number) {
