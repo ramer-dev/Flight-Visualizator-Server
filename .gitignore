@@ -47,3 +47,4 @@ dist/*
 .npmrc
 pnpm-lock.yaml
 dist.zip
+server.exe
