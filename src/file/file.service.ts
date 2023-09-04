@@ -54,7 +54,7 @@ export class FileService {
         const result = []
         for (let file of files) {
             const response = await axios.post("http://localhost:7001/", { data: file })
-            console.log(response.data)
+            this.log.log(`awaiting OCR image \t :: ${file.originalname} `)
             result.push(response.data)
         }
 
