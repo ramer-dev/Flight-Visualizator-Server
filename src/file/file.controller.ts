@@ -15,7 +15,7 @@ import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { FileService } from './file.service';
 import { ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger';
 import { FileValidationInterceptor } from 'common/utils/file-validation.interceptor';
-import path from 'path';
+import path, { extname } from 'path';
 
 const log = new Logger('FileService')
 
@@ -57,9 +57,9 @@ export class FileController {
     @ApiOperation({ summary: 'OCR 파일 업로드' })
     @UseInterceptors(FilesInterceptor('file', 10, {
         fileFilter: (req, file, cb) => {
-            // const ext = file.filename.split('.').pop()
-            console.log(file.originalname)
-            if (!file.originalname.match(/\.(png|pdf)$/g)) {
+            const allowedExtensions = ['.jpg', '.jpeg', '.png'];
+            const ext = extname(file.originalname)
+            if (!allowedExtensions.includes(ext)) {
                 return cb(new Error('png, pdf 파일만 허용됩니다.'), false)
             }
             cb(null, true);

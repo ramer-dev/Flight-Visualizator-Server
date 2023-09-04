@@ -25,11 +25,11 @@ export const multerOptionsFactory = (): MulterOptions => {
     return {
         storage: multer.diskStorage({
             destination(req, file, done) { // 파일을 저장할 위치를 설정합니다
-                
-                if (file.mimetype === 'image/png' || file.mimetype === 'application/pdf') {
+                const imgMimeType = ['image/jpeg', 'image/jpg', 'image/png']
+                const textMimeType = ['text/plain', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'text/csv', 'application/vnd.ms-excel']
+                if (imgMimeType.includes(file.mimetype)) {
                     done(null, path.join(process.cwd(), 'uploads/ocr'));
-                } else if (file.mimetype === 'text/plain' || file.mimetype === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
-                || file.mimetype === 'text/csv' || file.mimetype === 'application/vnd.ms-excel') {
+                } else if (textMimeType.includes(file.mimetype)) {
                     done(null, path.join(process.cwd(), 'uploads/route'))
                 } else {
                     throw new BadRequestException(`${file.mimetype} is not supported type.`)
@@ -44,7 +44,7 @@ export const multerOptionsFactory = (): MulterOptions => {
                 const ext = path.extname(file.originalname); // 파일 확장자 추출
                 const basename = path.basename(file.originalname, ext); // 파일 이름
                 // 파일 이름이 중복되는 것을 막기 위해 '파일이름_날짜.확장자' 의 형식으로 파일이름을 지정합니다.
-                done(null, `${basename}_${Date.now()}${ext}`);
+                done(null, `${basename}_${new Date().getFullYear()}${new Date().getMonth()}${ext}`);
             },
         }),
         limits: { fileSize: 10 * 1024 * 1024 }, // 10MB로 크기를 제한

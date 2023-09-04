@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable, Logger, UnsupportedMediaTypeException } from '@nestjs/common';
+import axios from 'axios';
 import fs from 'fs'
 import xlsx from 'xlsx'
 
@@ -8,7 +9,7 @@ export class FileService {
     COORDINATE_ERROR_VARIANT = 0.25;
 
     log = new Logger('FileService');
-    
+
     uploadRouteFile(file: Express.Multer.File) {
         if (!file) {
             throw new BadRequestException('파일이 존재하지 않습니다..');
@@ -37,23 +38,29 @@ export class FileService {
         }
     }
 
-    uploadOCRFile(file: Express.Multer.File[]) {
-        if (!file) {
+    async uploadOCRFile(files: Express.Multer.File[]) {
+        if (!files) {
             throw new BadRequestException('파일이 존재하지 않습니다..');
         }
         // let flag = false;
 
-        const result = file.map(t => {
-            if (t.mimetype === 'image/png' || t.mimetype === 'application/pdf') {
-                return t.path
-            }
-            // flag = true;
-            throw new UnsupportedMediaTypeException('지원하지 않는 형식입니다.')
-        })
+        // const result = file.map(t => {
+        //     if (t.mimetype === 'image/png' || t.mimetype === 'application/pdf') {
+        //         return t.path
+        //     }
+        //     // flag = true;
+        //     throw new UnsupportedMediaTypeException('지원하지 않는 형식입니다.')
+        // })
+        const result = []
+        for (let file of files) {
+            const response = await axios.post("http://localhost:7001/", { data: file })
+            console.log(response.data)
+            result.push(response.data)
+        }
 
         // if(flag) throw new UnsupportedMediaTypeException(
 
-        return { filePath: result, count: result.length };
+        return result;
 
     }
 
@@ -121,9 +128,9 @@ export class FileService {
         if (!(rawData[0][7] === 'LAT' && rawData[0][8] === 'LON')) {
             throw new BadRequestException('잘못된 TXT 파일 형식입니다.')
         }
-        if(rawData.length > 500) skip = true;
+        if (rawData.length > 500) skip = true;
 
-        
+
         for (let row of rawData) {
 
             for (let i = 8; i < 10; i++) {
@@ -151,7 +158,7 @@ export class FileService {
         }
         // const data = rawData.map(row => { return { height: row[7], coords: [row[8], row[9]] } }).splice(1)
 
-        if(skip) {
+        if (skip) {
             data.route = data.route.filter((t, i) => i % 2 === 0)
         }
         data['length'] = data.route.length;
