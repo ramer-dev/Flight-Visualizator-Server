@@ -5,14 +5,25 @@ import { setupSwagger } from './common/utils/swagger.options';
 import cookieParser from 'cookie-parser';
 import csurf from 'csurf';
 import helmet from 'helmet';
+import { readFileSync } from 'fs';
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+
+  
+  // const httpsOptions = {
+  //   key: readFileSync('./localCA.pem'),
+  //   cert: readFileSync('./localhost.test.pem')
+
+  // }
+
+  const app = await NestFactory.create(AppModule, {});
   const cspOptions = {
     directives: {
-      ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+      ...helmet.contentSecurityPolicy.getDefaultDirectives(), 
       "img-src": ['']
     }
   }
+
+
 
   const xFrameOptions = {
 
@@ -32,7 +43,7 @@ async function bootstrap() {
       transform: true,
     })
   )
-  await app.listen(7000); 
+  await app.listen(7000);
   app.use(csurf())
 
 }

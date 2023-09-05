@@ -60,7 +60,7 @@ export class FileController {
             const allowedExtensions = ['.jpg', '.jpeg', '.png'];
             const ext = extname(file.originalname)
             if (!allowedExtensions.includes(ext)) {
-                return cb(new Error('png, pdf 파일만 허용됩니다.'), false)
+                return cb(new Error('jpg, png 파일만 허용됩니다.'), false)
             }
             cb(null, true);
         }
