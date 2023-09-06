@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
-    "build:pkg": "pkg . --target node16-linux-x64 --output dist/server",
+    "build:pkg": "pkg . --target node16-x64 --output output",
     "build:docker": "docker build -t nestjs-docker-example .",
     "build:all": "yarn build && yarn build:pkg && yarn build:docker",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -34,7 +34,7 @@
     "@nestjs/swagger": "^6.3.0",
     "@nestjs/typeorm": "^9.0.1",
     "@types/cookie-parser": "^1.4.3",
-    "axios": "^1.5.0",
+    "axios": "0.27.2",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "cookie-parser": "^1.4.6",
@@ -103,6 +103,8 @@
   "bin": "dist/main.js",
   "pkg": {
     "scripts": "dist/**/*.js",
-    "assets": "logs/**/*"
+    "assets": [
+      "logs/**/*"
+    ]
   }
 }

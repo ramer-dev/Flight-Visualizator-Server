@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Logger, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Logger, Param, Patch, Post, Query } from "@nestjs/common";
 import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { InsertAreaDto } from "common/dto/area/area.insert.dto";
 import { UpdateAreaDto } from "common/dto/area/area.update.dto";
@@ -19,10 +19,11 @@ export class AreaController {
         type: [Area],
         description: '공역 조회 성공'
     })
-    getEntireArea() {
+    getEntireArea(@Query('valid') valid : boolean) {
         this.log.log(`get entire area`)
         try {
-            return this.areaService.getEntireArea();
+            if(valid) return this.areaService.getValidArea(); 
+            else return this.areaService.getEntireArea();
         } catch (e) {
             console.error(e);
         }
