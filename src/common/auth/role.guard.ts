@@ -13,10 +13,13 @@ export class RolesGuard implements CanActivate {
         if (!roles) {
             return true;
         }
+
         const request = context.switchToHttp().getRequest();
         const jwtService = new JwtService()
 
         const token = request.cookies.jwt;
+        
+        if(!token) return false;
 
         const {id, role, sub} = jwtService.decode(token) as Payload
 

@@ -18,6 +18,7 @@ node_modules/
 # bundle
 packages/**/*.d.ts
 packages/**/*.js
+*.exe
 
 # misc
 .DS_Store
@@ -28,6 +29,7 @@ yarn-error.log
 /packages/**/.npmignore
 /packages/**/LICENSE
 *.tsbuildinfo
+
 
 # uploads
 /uploads
@@ -47,4 +49,4 @@ dist/*
 .npmrc
 pnpm-lock.yaml
 dist.zip
-server.exe
+output.exe
