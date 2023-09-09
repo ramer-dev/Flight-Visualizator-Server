@@ -4,7 +4,7 @@ import { Roles } from "common/auth/role.decorator";
 import { RolesGuard } from "common/auth/role.guard";
 import { InsertFlightResultDto } from "common/dto/flight-result/flight-result.insert.dto";
 import { UpdateFlightResultDto } from "common/dto/flight-result/flight-result.update.dto";
-import { FlightResultFormDto } from "common/dto/flight-result.form.dto";
+import { FlightResultAddFormDto } from "common/dto/flight-result.form.dto";
 import { SearchDto } from "common/dto/search.dto";
 import { FlightResult } from "entities/flight-result.entity";
 import { ResultService } from "./result.service";
@@ -66,8 +66,9 @@ export class ResultController {
     @ApiOperation({summary:"비행검사 결과 수정", description:"비행검사 결과 수정"})
     @ApiOkResponse({type:Number, description:"비행검사 결과 수정 성공"})
     @ApiBadRequestResponse({description:'body 형식이 올바르지 않음'})
-    UpdateFlightResult(@Body() body: UpdateFlightResultDto[]) {
-        return this.resultService.updateFlightResult(body);
+    UpdateFlightResult(@Body() body: UpdateFlightResultDto[], @Body('testID') testID: number) {
+        console.log(body)
+        return this.resultService.updateFlightResult(body, testID);
     }
 
     @Patch(':id')

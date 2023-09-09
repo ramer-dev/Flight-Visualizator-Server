@@ -3,7 +3,7 @@ import { FlightList } from 'entities/flight-list.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { FlightResult } from 'entities/flight-result.entity';
-import { FlightResultFormDto } from 'common/dto/flight-result.form.dto';
+import { FlightResultAddFormDto, FlightResultUpdateFormDto } from 'common/dto/flight-result.form.dto';
 import { InsertFlightListDto } from 'common/dto/flight-list/flight-list.insert.dto';
 import { UpdateFlightListDto } from 'common/dto/flight-list/flight-list.update.dto';
 import { Page } from 'common/class/page.class';
@@ -35,7 +35,7 @@ export class ListService {
         return list; 
     }
 
-    async addFlightList(body: FlightResultFormDto): Promise<number> {
+    async addFlightList(body: FlightResultAddFormDto): Promise<number> {
         const flightList: InsertFlightListDto = body;
         const listRes = await this.listRepository.insert(flightList)
 
@@ -44,7 +44,7 @@ export class ListService {
         return listRes.identifiers[0].id;
     }
 
-    async updateFlightList(id: number, body: UpdateFlightListDto): Promise<number> {
+    async updateFlightList(id: number, body: UpdateFlightListDto) {
         await this.listRepository.update(id, body)
         this.log.log(`update flight list. id:${id}`)
         return id;

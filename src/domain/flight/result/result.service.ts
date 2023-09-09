@@ -3,13 +3,14 @@ import { ApiNotFoundResponse } from "@nestjs/swagger";
 import { InjectRepository } from "@nestjs/typeorm";
 import { InsertFlightResultDto } from "common/dto/flight-result/flight-result.insert.dto";
 import { UpdateFlightResultDto } from "common/dto/flight-result/flight-result.update.dto";
-import { FlightResultFormDto } from "common/dto/flight-result.form.dto";
+import { FlightResultAddFormDto, FlightResultUpdateFormDto } from "common/dto/flight-result.form.dto";
 import { SearchDto } from "common/dto/search.dto";
 import { FlightList } from "entities/flight-list.entity";
 import { FlightResult } from "entities/flight-result.entity";
 import { Between, Repository, Like, Point } from "typeorm";
 import { Page } from "common/class/page.class";
 import { PointType } from "common/dto/coordinate.types";
+import { UpdateFlightListDto } from "common/dto/flight-list/flight-list.update.dto";
 
 @Injectable()
 export class ResultService {
@@ -104,15 +105,17 @@ export class ResultService {
         this.log.log(`post flight result rows : ${body.length}`)
     }
 
-    async updateFlightResult(body: UpdateFlightResultDto[]) {
-        if (body.length) {
-            await this.resultRepository.delete({ testId: body[0].testId })
-            await this.resultRepository.insert(body)
+    async updateFlightResult(body: UpdateFlightListDto[], testId: number) {
+
+        await this.resultRepository.delete({ testId })
+        for (const item of body) {
+            if (item?.id) delete item.id;
         }
+        
         // const a = await this.resultRepository.findOne({ where: { id } })
         // this.log.log(`updated flight result id : ${id}`)
 
-        return body.length;
+        return await this.resultRepository.insert(body)
         // return id;
     }
 
@@ -129,10 +132,10 @@ export class ResultService {
 
     async findPointsWithinRadius(point: PointType, radius: number) {
         this.log.log(`find points near by : ${point.lat} ${point.lng}, ${radius}km`)
-        
+
         const result = await this.resultRepository.createQueryBuilder()
-        .where(`ST_DISTANCE(point, POINT(:lat, :lng)) * 111133 <= :radius * 1000`, { lat: point.lat, lng: point.lng, radius: radius })
-        .getMany()
+            .where(`ST_DISTANCE(point, POINT(:lat, :lng)) * 111133 <= :radius * 1000`, { lat: point.lat, lng: point.lng, radius: radius })
+            .getMany()
         return result;
     }
 }

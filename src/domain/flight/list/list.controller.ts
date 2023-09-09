@@ -4,7 +4,7 @@ import { Roles } from "common/auth/role.decorator";
 import { RolesGuard } from "common/auth/role.guard";
 import { InsertFlightListDto } from "common/dto/flight-list/flight-list.insert.dto";
 import { UpdateFlightListDto } from "common/dto/flight-list/flight-list.update.dto";
-import { FlightResultFormDto } from "common/dto/flight-result.form.dto";
+import { FlightResultAddFormDto, FlightResultUpdateFormDto } from "common/dto/flight-result.form.dto";
 import { FlightList } from "entities/flight-list.entity";
 import { ResultService } from "domain/flight/result/result.service";
 import { ListService } from "./list.service";
@@ -37,7 +37,7 @@ export class ListController {
     @ApiOperation({ summary: '비행 검사 추가', description: ' 비행 검사 결과 추가' })
     @ApiOkResponse({type:Number, description: '비행검사 전체 조회 성공'})
     @ApiBadRequestResponse({description: '요청 형식이 잘못됨'})
-    async addFlightList(@Body() body: FlightResultFormDto) {
+    async addFlightList(@Body() body: FlightResultAddFormDto) {
         const id = await this.listService.addFlightList(body);
         
         body.data = body.data.map(t => { if (id) { t.testId = id; } return t });
@@ -50,8 +50,9 @@ export class ListController {
     @ApiOkResponse({type:Number, description: '비행검사 수정 성공'})
     @ApiNotFoundResponse({description:'해당하는 ID가 존재하지 않음'})
     @ApiBadRequestResponse({description: '요청 형식이 잘못됨'})
-    updateFlightList(@Param('id') id : number, @Body() body : UpdateFlightListDto){
-        return this.listService.updateFlightList(id, body);
+    async updateFlightList(@Param('id') id : number, @Body() body : FlightResultUpdateFormDto){        
+        body.data = body.data.map(t => { if (id) { t.testId = id; } return t });
+        return await this.resultService.updateFlightResult(body.data, id);
     }
 
     @Delete(':id')
