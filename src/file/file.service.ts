@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable, Logger, UnsupportedMediaTypeException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 import fs from 'fs'
 import xlsx from 'xlsx'
@@ -6,6 +7,7 @@ import xlsx from 'xlsx'
 @Injectable()
 
 export class FileService {
+    constructor(private config: ConfigService) { }
     COORDINATE_ERROR_VARIANT = 0.25;
 
     log = new Logger('FileService');
@@ -53,7 +55,7 @@ export class FileService {
         // })
         const result = []
         for (let file of files) {
-            const response = await axios.post("http://localhost:7001/", { data: file })
+            const response = await axios.post(`http://${this.config.get('DB_HOST')}:7001/`, { data: file })
             this.log.log(`awaiting OCR image \t :: ${file.originalname} `)
             result.push(response.data)
         }
