@@ -15,7 +15,8 @@ import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { FileService } from './file.service';
 import { ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger';
 import { FileValidationInterceptor } from 'common/utils/file-validation.interceptor';
-import path, { extname } from 'path';
+import path, { extname, join } from 'path';
+import { createReadStream } from 'fs';
 
 const log = new Logger('FileService')
 
@@ -55,7 +56,7 @@ export class FileController {
 
     @Post('ocr')
     @ApiOperation({ summary: 'OCR 파일 업로드' })
-    @UseInterceptors(FilesInterceptor('file', 10, {
+    @UseInterceptors(FileInterceptor('file', {
         fileFilter: (req, file, cb) => {
             const allowedExtensions = ['.jpg', '.jpeg', '.png'];
             const ext = extname(file.originalname)
@@ -65,7 +66,7 @@ export class FileController {
             cb(null, true);
         }
     }))
-    uploadOCRFile(@UploadedFiles() file: Express.Multer.File[]) {
+    async uploadOCRFile(@UploadedFile() file:Express.Multer.File) {
         return this.fileService.uploadOCRFile(file);
     }
 }

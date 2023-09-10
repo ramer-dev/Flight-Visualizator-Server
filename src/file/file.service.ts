@@ -1,7 +1,11 @@
-import { BadRequestException, Injectable, Logger, UnsupportedMediaTypeException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, StreamableFile, UnsupportedMediaTypeException } from '@nestjs/common';
 import axios from 'axios';
-import fs from 'fs'
+import fs, { createReadStream } from 'fs'
+import { join } from 'path';
+import formData from 'form-data'
 import xlsx from 'xlsx'
+
+
 
 @Injectable()
 
@@ -9,6 +13,25 @@ export class FileService {
     COORDINATE_ERROR_VARIANT = 0.25;
 
     log = new Logger('FileService');
+
+    streamToBlob(stream: fs.ReadStream) {
+        return new Promise((resolve, reject) => {
+            const chunks = [];
+
+            stream.on('data', chunk => {
+                chunks.push(chunk);
+            });
+
+            stream.on('end', () => {
+                const blob = new Blob(chunks, { type: 'image/jpg' });
+                resolve(blob);
+            });
+
+            stream.on('error', error => {
+                reject(error);
+            });
+        });
+    }
 
     uploadRouteFile(file: Express.Multer.File) {
         if (!file) {
@@ -38,29 +61,34 @@ export class FileService {
         }
     }
 
-    async uploadOCRFile(files: Express.Multer.File[]) {
-        if (!files) {
+    async uploadOCRFile(file: any) {
+        if (!file) {
             throw new BadRequestException('파일이 존재하지 않습니다..');
         }
-        // let flag = false;
+        let b: Blob;
 
-        // const result = file.map(t => {
-        //     if (t.mimetype === 'image/png' || t.mimetype === 'application/pdf') {
-        //         return t.path
-        //     }
-        //     // flag = true;
-        //     throw new UnsupportedMediaTypeException('지원하지 않는 형식입니다.')
-        // })
-        const result = []
-        for (let file of files) {
-            const response = await axios.post("http://localhost:7001/", { data: file })
-            this.log.log(`awaiting OCR image \t :: ${file.originalname} `)
-            result.push(response.data)
+
+
+        const form = new formData();
+        form.append('data', fs.createReadStream(file.path), file.originalname)
+
+        this.log.log(`awaiting OCR image \t :: ${file.originalname} `)
+        try {
+            const response = await axios.post("http://127.0.0.1:7001/", form, {
+                proxy:false,
+                headers: {
+                    ...form.getHeaders(),
+                },
+            })
+            console.log(response.data)
+            return response.data
+
+        } catch (e) {
+            console.error(e)
         }
 
-        // if(flag) throw new UnsupportedMediaTypeException(
 
-        return result;
+
 
     }
 
