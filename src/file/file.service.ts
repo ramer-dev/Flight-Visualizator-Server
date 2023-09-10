@@ -1,4 +1,5 @@
-import { BadRequestException, Injectable, Logger, StreamableFile, UnsupportedMediaTypeException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, UnsupportedMediaTypeException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 import fs, { createReadStream } from 'fs'
 import { join } from 'path';
@@ -10,6 +11,7 @@ import xlsx from 'xlsx'
 @Injectable()
 
 export class FileService {
+    constructor(private config: ConfigService) { }
     COORDINATE_ERROR_VARIANT = 0.25;
 
     log = new Logger('FileService');
@@ -74,7 +76,7 @@ export class FileService {
 
         this.log.log(`awaiting OCR image \t :: ${file.originalname} `)
         try {
-            const response = await axios.post("http://127.0.0.1:7001/", form, {
+            const response = await axios.post(`http://${this.config.get('DB_HOST')}:7001/`, form, {
                 proxy:false,
                 headers: {
                     ...form.getHeaders(),

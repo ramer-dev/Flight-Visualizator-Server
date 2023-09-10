@@ -1,0 +1,23 @@
+FROM node:18-alpine
+
+WORKDIR /usr/src/app
+
+EXPOSE 7000
+
+COPY ./package.json ./
+
+RUN yarn
+
+COPY . .
+
+ENV SECRET_KEY=c0mtr2
+ENV DB_ID=root
+ENV DB_PW=root
+ENV DB_DATABASE=backup
+ENV DB_PORT=3306
+ENV DB_HOST=host.docker.internal
+ENV ORIGIN=http://host.docker.internal:8000
+
+RUN yarn build
+
+CMD [ "yarn", "start:prod" ]
