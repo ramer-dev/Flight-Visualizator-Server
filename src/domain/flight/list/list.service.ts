@@ -32,7 +32,7 @@ export class ListService {
         list.data = new Page(count, 100, result)
         console.log(list.data)
         this.log.log(`get one flight Lists: name:${id}`)
-        return list; 
+        return list;
     }
 
     async addFlightList(body: FlightResultAddFormDto): Promise<number> {

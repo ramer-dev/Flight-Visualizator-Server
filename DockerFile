@@ -10,7 +10,7 @@ RUN yarn
 
 COPY . .
 
-ENV SECRET_KEY=c0mtr2
+ENV SECRET_KEY=GQ1u!QzIL+'Y+9.
 ENV DB_ID=root
 ENV DB_PW=root
 ENV DB_DATABASE=backup

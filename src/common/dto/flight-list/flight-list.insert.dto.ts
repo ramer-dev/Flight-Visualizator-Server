@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsNumber, IsDate, IsOptional, IsDateString } from 'class-validator'
+import { FlightResult } from 'entities/flight-result.entity';
 
 export class InsertFlightListDto {
     @ApiProperty({example:0})
@@ -25,5 +26,7 @@ export class InsertFlightListDto {
 
     @ApiProperty({example:'username'})
     @IsString()
+    @IsOptional()
     userId: string;
+
 }

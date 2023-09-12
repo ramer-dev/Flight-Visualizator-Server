@@ -106,17 +106,14 @@ export class ResultService {
     }
 
     async updateFlightResult(body: UpdateFlightListDto[], testId: number) {
-
+        this.log.log(`DELETE Result | testId : ${testId}`)
         await this.resultRepository.delete({ testId })
         for (const item of body) {
             if (item?.id) delete item.id;
         }
-        
-        // const a = await this.resultRepository.findOne({ where: { id } })
-        // this.log.log(`updated flight result id : ${id}`)
+        this.log.log(`INSERT Result | testId : ${testId}`)
 
         return await this.resultRepository.insert(body)
-        // return id;
     }
 
     async deleteFlightResult(id: number[]) {

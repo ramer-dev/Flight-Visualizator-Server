@@ -50,9 +50,10 @@ export class ListController {
     @ApiOkResponse({type:Number, description: '비행검사 수정 성공'})
     @ApiNotFoundResponse({description:'해당하는 ID가 존재하지 않음'})
     @ApiBadRequestResponse({description: '요청 형식이 잘못됨'})
-    async updateFlightList(@Param('id') id : number, @Body() body : FlightResultUpdateFormDto){        
-        body.data = body.data.map(t => { if (id) { t.testId = id; } return t });
-        return await this.resultService.updateFlightResult(body.data, id);
+    async updateFlightList(@Param('id') id : number, @Body() body : UpdateFlightListDto){        
+        // body.data = body.data.map(t => { if (id) { t.testId = id; } return t });
+        if(Object.keys(body).filter(t => t === 'data').length) {delete body['data']; console.log('deleted')}
+        return await this.listService.updateFlightList(id, body);
     }
 
     @Delete(':id')

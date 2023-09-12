@@ -66,9 +66,9 @@ export class ResultController {
     @ApiOperation({summary:"비행검사 결과 수정", description:"비행검사 결과 수정"})
     @ApiOkResponse({type:Number, description:"비행검사 결과 수정 성공"})
     @ApiBadRequestResponse({description:'body 형식이 올바르지 않음'})
-    UpdateFlightResult(@Body() body: UpdateFlightResultDto[], @Body('testID') testID: number) {
-        console.log(body)
-        return this.resultService.updateFlightResult(body, testID);
+    UpdateFlightResult(@Body() body: UpdateFlightResultDto[]) {
+        const testId = body[0].testId
+        return this.resultService.updateFlightResult(body, testId);
     }
 
     @Patch(':id')
