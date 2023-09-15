@@ -15,15 +15,13 @@ import { RouteModule } from 'domain/route/route.module';
 import { FrequencyModule } from 'domain/frequency/frequency.module';
 import { SiteModule } from 'domain/site/site.module';
 import { MapModule } from 'domain/map/map.module';
-import configuration from 'config/configuration';
+import { LoggerModule } from 'logger/logger.module';
 
 @Module({
   imports: [
+    LoggerModule,
     ConfigModule.forRoot({ isGlobal:true, envFilePath: `.development.env` }),
     TypeOrmModule.forRootAsync({
-      // useFactory: (config: ConfigService) => ({
-      //    database: config.get<string>('')
-      // }),
       useClass: TypeOrmConfigService,
       inject:[LoginModule]
     }),

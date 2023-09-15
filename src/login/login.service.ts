@@ -8,7 +8,6 @@ interface AccountInterface {
     token: string,
     role: number,
 }
-const log = new Logger('LoginService')
 @Injectable()
 export class LoginService {
     constructor(
@@ -25,12 +24,10 @@ export class LoginService {
         }
 
         if (result.id === id_ && result.pw === pw_) {
-            log.log(`${result.id} has logged in.`)
             const payload = { id: result.id, role: result.role, sub: '0' };
             const token = this.jwtService.sign(payload)
             return { token, role: result.role }
         }
-        log.log(`401 Error Thrown. id:${id_}| pw:${pw_}`)
         throw new UnauthorizedException('일치하는 사용자 ID/PW가 없습니다.')
     }
 }

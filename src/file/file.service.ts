@@ -67,9 +67,6 @@ export class FileService {
         if (!file) {
             throw new BadRequestException('파일이 존재하지 않습니다..');
         }
-        let b: Blob;
-
-
 
         const form = new formData();
         form.append('data', fs.createReadStream(file.path), file.originalname)
@@ -87,10 +84,6 @@ export class FileService {
         } catch (e) {
             console.error(e.code)
         }
-
-
-
-
     }
 
     private parseExcel(filename: string) {

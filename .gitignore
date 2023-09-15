@@ -50,3 +50,4 @@ dist/*
 pnpm-lock.yaml
 dist.zip
 output.exe
+/log
