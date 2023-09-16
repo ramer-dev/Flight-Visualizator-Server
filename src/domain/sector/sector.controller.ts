@@ -1,5 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Roles } from 'common/auth/role.decorator';
+import { RolesGuard } from 'common/auth/role.guard';
 import { InsertSectorDto } from 'common/dto/sector/sector.insert.dto';
 import { UpdateSectorDto } from 'common/dto/sector/sector.update.dto';
 import { Sector } from 'entities/sector.entity';
@@ -30,7 +32,8 @@ export class SectorController {
     getEntireSector() {
         return this.sectorService.getEntireSector();
     }
-
+    @Roles(2)
+    @UseGuards(RolesGuard)
     @Post()
     @ApiOperation({summary:"섹터 추가", description:"섹터 추가"})
     @ApiOkResponse({type:[Sector], description:"섹터 추가 성공"})
@@ -39,7 +42,8 @@ export class SectorController {
         body.sectorData.push(body.sectorData[0]);
         return this.sectorService.createSector(body);
     }
-
+    @Roles(2)
+    @UseGuards(RolesGuard)
     @Patch(':id')
     @ApiOperation({summary:"섹터 수정", description:"섹터 수정"})
     @ApiOkResponse({type:Number, description:"섹터 수정 성공"})
@@ -50,7 +54,8 @@ export class SectorController {
             body.sectorData.push(body.sectorData[0]);
         return this.sectorService.updateSector(id, body);
     }
-
+    @Roles(2)
+    @UseGuards(RolesGuard)
     @Delete(':id')
     @ApiOperation({summary:"섹터 삭제", description:"섹터 삭제"})
     @ApiOkResponse({type:Number, description:"섹터 삭제 성공"})

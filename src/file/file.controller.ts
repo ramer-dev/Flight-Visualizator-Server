@@ -9,6 +9,7 @@ import {
     Query,
     UploadedFile,
     UploadedFiles,
+    UseGuards,
     UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
@@ -17,6 +18,8 @@ import { ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger';
 import { FileValidationInterceptor } from 'common/utils/file-validation.interceptor';
 import path, { extname, join } from 'path';
 import { createReadStream } from 'fs';
+import { Roles } from 'common/auth/role.decorator';
+import { RolesGuard } from 'common/auth/role.guard';
 
 const log = new Logger('FileService')
 
@@ -26,7 +29,8 @@ const log = new Logger('FileService')
 export class FileController {
 
     constructor(private readonly fileService: FileService) { }
-
+    @Roles(2)
+    @UseGuards(RolesGuard)
     @Post('route')
     @ApiOperation({ summary: '파일 업로드 API', description: "파일을 업로드한다." })
     @UseInterceptors(FileInterceptor('file', {
@@ -53,7 +57,8 @@ export class FileController {
     getRouteFromFile(@Query('filename') filename: string) {
         return this.fileService.getRouteFromFile(filename)
     }
-
+    @Roles(2)
+    @UseGuards(RolesGuard)
     @Post('ocr')
     @ApiOperation({ summary: 'OCR 파일 업로드' })
     @UseInterceptors(FileInterceptor('file', {

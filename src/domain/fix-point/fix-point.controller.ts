@@ -1,5 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common";
 import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
+import { Roles } from "common/auth/role.decorator";
+import { RolesGuard } from "common/auth/role.guard";
 import { InsertFixPointDto } from "common/dto/fix-point/fix-point.insert.dto";
 import { UpdateFixPointDto } from "common/dto/fix-point/fix-point.update.dto";
 import { FixPoint } from "entities/fix-point.entity";
@@ -27,6 +29,8 @@ export class FixPointController {
 
 
     @Post()
+    @Roles(2)
+    @UseGuards(RolesGuard)
     @ApiOperation({ summary: '픽스점 생성', description: 'body로 입력해준 정보대로 픽스점을 생성한다.' })
     @ApiOkResponse({ description: '픽스점 생성 성공' })
     @ApiBadRequestResponse({ description: '픽스점 생성 실패. body 입력 정보를 확인해주세요.' })
@@ -36,6 +40,8 @@ export class FixPointController {
     }
 
     @Patch(':id')
+    @Roles(2)
+    @UseGuards(RolesGuard)
     @ApiOperation({ summary: '픽스점 수정', description: 'body로 입력해준 정보대로 픽스점을 수정한다.' })
     @ApiOkResponse({ description: '픽스점 수정 성공' })
     @ApiBadRequestResponse({ description: '픽스점 수정 실패. body 입력 정보를 확인해주세요.' })
@@ -44,6 +50,8 @@ export class FixPointController {
     }
 
     @Delete(':id')
+    @Roles(2)
+    @UseGuards(RolesGuard)
     @ApiOperation({ summary: '픽스점 삭제', description: '입력한 id의 픽스점을 삭제한다.' })
     @ApiOkResponse({ description: '픽스점 삭제 성공' })
     deleteFixPoint(@Param('id') id: number) {

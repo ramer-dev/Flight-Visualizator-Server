@@ -1,5 +1,5 @@
 import { Controller, Post, Body, Res } from '@nestjs/common';
-import { Get, Inject, Req } from '@nestjs/common/decorators';
+import { Get, Inject, Req, UseGuards } from '@nestjs/common/decorators';
 import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { LoginService } from './login.service';
@@ -7,6 +7,8 @@ import { WINSTON_MODULE_PROVIDER, WinstonLogger } from 'nest-winston';
 import { Logger } from 'winston';
 import { printWinstonLog } from 'logger/logger.factory';
 import { INQUIRER } from '@nestjs/core';
+import { Roles } from 'common/auth/role.decorator';
+import { RolesGuard } from 'common/auth/role.guard';
 
 @ApiTags('로그인 API')
 @Controller('auth')
@@ -64,7 +66,8 @@ export class LoginController {
     //     console.log(jwt)
     //     return res.send(jwt);
     // }
-
+    @Roles(1)
+    @UseGuards(RolesGuard)
     @Post('logout')
     logout(@Res() res: Response, @Req() req: Request) {
         printWinstonLog(this.logger, {

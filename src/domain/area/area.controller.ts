@@ -1,5 +1,7 @@
-import { Body, Controller, Delete, Get, Logger, Param, Patch, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Logger, Param, Patch, Post, Query, UseGuards } from "@nestjs/common";
 import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
+import { Roles } from "common/auth/role.decorator";
+import { RolesGuard } from "common/auth/role.guard";
 import { InsertAreaDto } from "common/dto/area/area.insert.dto";
 import { UpdateAreaDto } from "common/dto/area/area.update.dto";
 import { Area } from "entities/area.entity";
@@ -30,6 +32,8 @@ export class AreaController {
     }
 
     @Post()
+    @Roles(2)
+    @UseGuards(RolesGuard)
     @ApiOperation({ description: '공역 추가', summary: '공역 추가' })
     @ApiOkResponse({
         type: Number,
@@ -46,6 +50,8 @@ export class AreaController {
     }
 
     @Patch(':id')
+    @Roles(2)
+    @UseGuards(RolesGuard)
     @ApiOperation({ description: '공역 수정, body 요소는 전부 선택요소임', summary: '공역 수정' })
     @ApiOkResponse({
         type: Number,
@@ -65,6 +71,8 @@ export class AreaController {
     }
 
     @Delete(':id')
+    @Roles(3)
+    @UseGuards(RolesGuard)
     @ApiOperation({ description: '공역 삭제', summary: '공역 삭제' })
     @ApiOkResponse({
         type: Number,
