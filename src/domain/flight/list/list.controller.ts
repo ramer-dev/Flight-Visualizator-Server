@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Inject, Logger, Param, Patch, Post, Query, Req, UseGuards } from "@nestjs/common";
-import { ApiBadRequestResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiBadRequestResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiQuery, ApiTags } from "@nestjs/swagger";
 import { Roles } from "common/auth/role.decorator";
 import { RolesGuard } from "common/auth/role.guard";
 import { InsertFlightListDto } from "common/dto/flight-list/flight-list.insert.dto";
@@ -46,7 +46,11 @@ export class ListController {
     @ApiOperation({ summary: '비행검사 단일 조회', description: '비행검사 단일 항목 조회' })
     @ApiOkResponse({ type: FlightList, description: '비행검사 단일 조회 성공' })
     @ApiNotFoundResponse({ description: '해당하는 ID가 존재하지 않음' })
-    getOneItem(@Param('id') id: number, @Query('p') page: number, @Req() req: Request) {
+    @ApiQuery({
+        name:'p',
+        required:false,
+    })
+    getOneItem(@Param('id') id: number, @Req() req: Request, @Query('p') page: number) {
         printWinstonLog(this.logger, {
             ip: req.ip,
             module: ListController.name,
@@ -124,10 +128,10 @@ export class ListController {
     deleteFlightList(@Param('id') id: number, @Req() req: Request) {
         try {
             printWinstonLog(this.logger, {
-            ip: req.ip,
-            module: ListController.name,
-            message: `[DELETE] Flight List ID : ${id}`
-        }, 'info')
+                ip: req.ip,
+                module: ListController.name,
+                message: `[DELETE] Flight List ID : ${id}`
+            }, 'info')
             return this.listService.deleteFlightList(id);
         } catch (e) {
             printWinstonLog(this.logger, {

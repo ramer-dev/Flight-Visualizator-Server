@@ -9,15 +9,20 @@ export function setupSwagger(app: INestApplication): void {
     const options = new DocumentBuilder()
     .setTitle("Flight Visualizator API Docs")
     .setDescription("비행검사 시각화 서버 API")
-    .setTermsOfService('MIT')
     .setContact('신희상', 'https://github.com/ramer-dev', 'ramer-dev@kakao.com')
-    .setVersion('1.0.0')
-    .setBasePath('localhost:3000')
+    .setVersion('1.1.5')
+    .setBasePath('/v1/api')
+    .addBearerAuth({
+        type: 'http',
+        scheme:'bearer',
+        name: 'jwt',
+        in: 'header'
+    }, 'access-token')
     .build();
 
 
 
     const document = SwaggerModule.createDocument(app, options);
 
-    SwaggerModule.setup('swagger', app, document);
+    SwaggerModule.setup('v1/api/swagger', app, document);
 }

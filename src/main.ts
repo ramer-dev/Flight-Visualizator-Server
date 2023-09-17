@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import csurf from 'csurf';
 import helmet from 'helmet';
 import { readFileSync } from 'fs';
+import { DocumentBuilder } from '@nestjs/swagger';
 async function bootstrap() {
 
   
@@ -15,7 +16,7 @@ async function bootstrap() {
 
   // }
 
-  const app = await NestFactory.create(AppModule, {});
+  const app = await NestFactory.create(AppModule, {}); 
   const cspOptions = {
     directives: {
       ...helmet.contentSecurityPolicy.getDefaultDirectives(), 
@@ -28,8 +29,10 @@ async function bootstrap() {
   const xFrameOptions = {
 
   }
-  setupSwagger(app);
   app.setGlobalPrefix('/v1/api')
+
+  setupSwagger(app);
+  
   app.use(helmet({ contentSecurityPolicy: false, crossOriginResourcePolicy: { policy: 'cross-origin' } }))
   app.use(helmet.hidePoweredBy())
   app.use(helmet.xssFilter())

@@ -6,7 +6,6 @@ import { TypeOrmConfigService } from './common/utils/db.options';
 import { FileModule } from './file/file.module';
 import { FlightModule } from 'domain/flight/flight.module';
 import { LoginModule } from './login/login.module';
-import { UserController } from './user/user.controller';
 import { NoticeModule } from 'domain/notice/notice.module';
 import { FixPointModule } from 'domain/fix-point/fix-point.module';
 import { SectorModule } from 'domain/sector/sector.module';
@@ -37,7 +36,7 @@ import { LoggerModule } from 'logger/logger.module';
     SiteModule,
     MapModule,
   ],
-  controllers: [UserController],
+  controllers: [],
   providers: [],
 })
 export class AppModule { }

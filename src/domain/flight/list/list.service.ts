@@ -23,13 +23,12 @@ export class ListService {
         return res;
     }
 
-    async getOneItem(id: number, skip: number) {
+    async getOneItem(id: number, skip?: number) {
 
         const list = await this.listRepository.findOne({ where: { id } })
         const [result, count] = await this.resultRepository.findAndCount({ where: { testId: id }, skip: 100 * skip })
 
         list.data = new Page(count, 100, result)
-        console.log(list.data)
         return list;
     }
 
