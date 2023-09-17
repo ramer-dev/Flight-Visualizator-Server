@@ -1,9 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Inject, Logger, Param, Patch, Post, Req, UseGuards } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { Roles } from "common/auth/role.decorator";
 import { RolesGuard } from "common/auth/role.guard";
 import { InsertRouteListDto } from "common/dto/route/route-list.insert.dto";
 import { UpdateRouteListDto } from "common/dto/route/route-list.update.dto";
+import { Request } from "express";
+import { printWinstonLog } from "logger/logger.factory";
+import { WINSTON_MODULE_PROVIDER } from "nest-winston";
 import { RouteService } from "./route.service";
 
 @Controller('route')
@@ -11,35 +14,101 @@ import { RouteService } from "./route.service";
 export class RouteController {
     constructor(
         private readonly routeService: RouteService,
+        @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
     ) { }
 
     @Get()
-    getEntireRoute() {
-        return this.routeService.getEntireRoute();
+    getEntireRoute(@Req() req: Request) {
+        printWinstonLog(this.logger, {
+            message: `[GET] Entire Route`,
+            module: RouteController.name,
+            ip: req.ip
+        }, 'info')
+        try {
+            return this.routeService.getEntireRoute();
+        } catch (e) {
+            printWinstonLog(this.logger, {
+                message: `[GET] Failed to Get Entire Route`,
+                module: RouteController.name,
+                ip: req.ip
+            }, 'error')
+        }
     }
 
     @Get(':id')
-    getSingleRoute(@Param('id') id: number) {
-        return this.routeService.getSingleRoute(id)
+    getSingleRoute(@Param('id') id: number, @Req() req: Request) {
+        printWinstonLog(this.logger, {
+            message: `[GET] Single Route | id : ${id}`,
+            module: RouteController.name,
+            ip: req.ip
+        }, 'info')
+        try {
+            return this.routeService.getSingleRoute(id)
+        } catch (e) {
+            printWinstonLog(this.logger, {
+                message: `[GET] Failed to Get Single Route | id : ${id}`,
+                module: RouteController.name,
+                ip: req.ip
+            }, 'error')
+        }
     }
 
     @Roles(2)
     @UseGuards(RolesGuard)
     @Post()
-    addRoute(@Body() body: InsertRouteListDto) {
-        return this.routeService.addSingleRoute(body);
+    addRoute(@Body() body: InsertRouteListDto, @Req() req: Request) {
+        printWinstonLog(this.logger, {
+            message: `[POST] Add Route ${body.routeName}}`,
+            module: RouteController.name,
+            ip: req.ip
+        }, 'info')
+        try {
+            return this.routeService.addSingleRoute(body);
+        } catch (e) {
+            printWinstonLog(this.logger, {
+                message: `[POST] Failed to Add Route ${body.routeName}`,
+                module: RouteController.name,
+                ip: req.ip
+            }, 'error')
+        }
     }
     @Roles(2)
     @UseGuards(RolesGuard)
     @Patch(':id')
-    updateRoute(@Param('id') id: number, @Body() body: InsertRouteListDto) {
-        return this.routeService.updateRoute(id, body);
+    updateRoute(@Param('id') id: number, @Body() body: InsertRouteListDto, @Req() req: Request) {
+        printWinstonLog(this.logger, {
+            message: `[PATCH] Update Route ${body.routeName}}`,
+            module: RouteController.name,
+            ip: req.ip
+        }, 'info')
+        try {
+            return this.routeService.updateRoute(id, body);
+        } catch (e) {
+            printWinstonLog(this.logger, {
+                message: `[PATCH] Failed to Update Route ${body.routeName}`,
+                module: RouteController.name,
+                ip: req.ip
+            }, 'error')
+        }
     }
     @Roles(3)
     @UseGuards(RolesGuard)
     @Delete(':id')
-    deleteRoute(@Param('id') id: number) {
-        return this.routeService.deleteRoute(id);
+    deleteRoute(@Param('id') id: number, @Req() req: Request) {
+        printWinstonLog(this.logger, {
+            message: `[DELETE] Route | id : ${id}`,
+            module: RouteController.name,
+            ip: req.ip
+        }, 'info')
+        try {
+            return this.routeService.deleteRoute(id);
+        } catch (e) {
+            printWinstonLog(this.logger, {
+                message: `[DELETE] Failed to Delete Route | id : ${id}`,
+                module: RouteController.name,
+                ip: req.ip
+            }, 'error')
+        }
     }
 
 }

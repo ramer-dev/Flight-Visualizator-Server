@@ -6,7 +6,6 @@ import { LoginService } from './login.service';
 import { WINSTON_MODULE_PROVIDER, WinstonLogger } from 'nest-winston';
 import { Logger } from 'winston';
 import { printWinstonLog } from 'logger/logger.factory';
-import { INQUIRER } from '@nestjs/core';
 import { Roles } from 'common/auth/role.decorator';
 import { RolesGuard } from 'common/auth/role.guard';
 
@@ -21,10 +20,9 @@ export class LoginController {
     @ApiBadRequestResponse({ description: '아이디 비밀번호가 일치하지 않음' })
     async login(@Body('id') id: string, @Body('pw') pw: string, @Req() req: Request, @Res() res: Response) {
         try {
-            // this.logger.debug(`${id} : ${req.ip} | tried login`)
             printWinstonLog(this.logger, {
-                message: `${id} | tried login`,
-                module: 'LOGIN',
+                message: `id : ${id} | tried login`,
+                module: LoginController.name,
                 ip: req.ip
             }, 'info')
             const result = await this.loginService.login(id, pw);
@@ -42,7 +40,7 @@ export class LoginController {
 
             printWinstonLog(this.logger, {
                 message: `${id} | login succeed`,
-                module: 'LOGIN',
+                module: LoginController.name,
                 ip: req.ip
             }, 'info')
 
@@ -53,7 +51,7 @@ export class LoginController {
         } catch (e) {
             printWinstonLog(this.logger, {
                 message: `${id} | failed login`,
-                module: 'LOGIN',
+                module: LoginController.name,
                 ip: req.ip
             }, 'error')
         }
@@ -72,7 +70,7 @@ export class LoginController {
     logout(@Res() res: Response, @Req() req: Request) {
         printWinstonLog(this.logger, {
             message: `user logout`,
-            module: 'LOGIN',
+            module: LoginController.name,
             ip: req.ip
         }, 'info')
         res.cookie('jwt', '', {

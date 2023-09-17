@@ -14,7 +14,6 @@ import { UpdateFlightListDto } from "common/dto/flight-list/flight-list.update.d
 
 @Injectable()
 export class ResultService {
-    private readonly log: Logger = new Logger(ResultService.name)
     constructor(
         @InjectRepository(FlightResult)
         private readonly resultRepository: Repository<FlightResult>,
@@ -23,7 +22,6 @@ export class ResultService {
     ) { }
 
     async getAllResult(/*skip: number,*/ take: number) {
-        this.log.log(`get every data of flight result ${take}`)
         const a: FlightList = {
             id: -1,
             testName: "Search",
@@ -39,7 +37,6 @@ export class ResultService {
 
         a.data = new Page(count, take, result)
 
-        this.log.log(`get every data of flight result ${result.length}EA  ${take}`)
         return a;
     }
 
@@ -51,7 +48,6 @@ export class ResultService {
         const page = new Page(count, 100, result);
 
         list.data = page;
-        this.log.log(`get specific data of:${id} : ${list.data.totalCount}EA`)
         // list.data = [result, { count: count }]
         return list
     }
@@ -92,7 +88,6 @@ export class ResultService {
         // }
         const res = await this.resultRepository.find({ where });
         const res2 = await this.resultRepository.createQueryBuilder('flight_result').getOne()
-        this.log.log(`get search flight data of: ${res.length}EA`)
 
         // .innerJoin('flight_result.test_name', 'flight_list')
         // .getMany()
@@ -102,34 +97,27 @@ export class ResultService {
 
     async addFlightResult(body: InsertFlightResultDto[]) {
         await this.resultRepository.insert(body)
-        this.log.log(`post flight result rows : ${body.length}`)
     }
 
     async updateFlightResult(body: UpdateFlightListDto[], testId: number) {
-        this.log.log(`DELETE Result | testId : ${testId}`)
         await this.resultRepository.delete({ testId })
         for (const item of body) {
             if (item?.id) delete item.id;
         }
-        this.log.log(`INSERT Result | testId : ${testId}`)
 
         return await this.resultRepository.insert(body)
     }
 
     async deleteFlightResult(id: number[]) {
         await this.resultRepository.softDelete(id);
-        this.log.log(`deleted flight result id : ${id}`)
     }
 
     async updateCoordData(body: UpdateFlightResultDto, id: number) {
-        this.log.log(`updated flight result id : ${id}`)
         // this.log.log(`lat ${body?.point?.lat} | lng ${body?.point.lng}`)
         await this.resultRepository.createQueryBuilder().update(FlightResult).set(body).where({ id }).execute();
     }
 
     async findPointsWithinRadius(point: PointType, radius: number) {
-        this.log.log(`find points near by : ${point.lat} ${point.lng}, ${radius}km`)
-
         const result = await this.resultRepository.createQueryBuilder()
             .where(`ST_DISTANCE(point, POINT(:lat, :lng)) * 111133 <= :radius * 1000`, { lat: point.lat, lng: point.lng, radius: radius })
             .getMany()

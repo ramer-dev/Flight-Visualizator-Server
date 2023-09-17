@@ -23,7 +23,7 @@ import path from 'path';
                         winston.format.colorize(),
                         winston.format.printf(
                             (info) =>
-                                `[${info.timestamp}] (${info.level}) FLYCHECK_API.${info.module} : (${info.ip}) : ${info.message}`,
+                                `[FLYCHECK_API] ${info.level} [${info.timestamp}] ${info.module} : (${info.ip}) : ${info.message}`,
                         ),
 
                     ),

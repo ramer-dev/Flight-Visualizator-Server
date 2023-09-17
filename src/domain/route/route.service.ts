@@ -9,7 +9,6 @@ import { Repository } from "typeorm";
 
 @Injectable()
 export class RouteService {
-    log = new Logger('RouteService');
     constructor(
         @InjectRepository(Route)
         private readonly routeRepository: Repository<Route>,
@@ -18,19 +17,16 @@ export class RouteService {
     ) { }
 
     getEntireRoute() {
-        this.log.log('GET entire route')
         return this.routeListRepository.find({ relations: ['routeData', 'routeData.routePointData'], order: { routeData: { routeEntry: 'ASC' } } });
     }
 
     getSingleRoute(id: number) {
-        this.log.log(`GET single ${id} route`)
         return this.routeListRepository.findOne({ where: { routeId: id }, relations: ['routeData', 'routeData.routePointData'], order: { routeData: { routeEntry: 'ASC' } } });
     }
 
     // 1. list data를 insert
     // 2. entry data insert
     async addSingleRoute(body: InsertRouteListDto) {
-        this.log.log(`POST new route | routename : ${body.routeName}`)
         const { routeName } = body;
 
         const routeData = body.routeData.map((t, i) => {
@@ -50,7 +46,6 @@ export class RouteService {
     }
 
     async updateRoute(id: number, body: InsertRouteListDto) {
-        this.log.log(`PATCH new route | routeID : ${id}`)
         // route에서 routeID가 id와 같은 경우 삭제
         // routeList body에 맞게 update
         // route 정보 업데이트 
@@ -77,10 +72,8 @@ export class RouteService {
 
         try {
             if (findByName) {
-                this.log.log(`found name: ${findByName}`)
                 // 찾은 결과가 있고 ID가 다른 경우 (중복), 
                 if (findByName.routeId !== id) {
-                    this.log.log(`Conflict name ${findByName.routeId}`)
                     throw new ConflictException('중복된 이름입니다.')
                 } else {
                     // this.log.log(`Conflict name ${findByName.routeId}`)

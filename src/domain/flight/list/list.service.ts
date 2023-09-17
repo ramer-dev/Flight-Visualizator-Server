@@ -20,7 +20,6 @@ export class ListService {
 
     async getAllList(): Promise<FlightList[]> {
         const res = await this.listRepository.find({ order: { id: 'desc' } });
-        this.log.log(`get all Lists: length:${res.length}`)
         return res;
     }
 
@@ -31,7 +30,6 @@ export class ListService {
 
         list.data = new Page(count, 100, result)
         console.log(list.data)
-        this.log.log(`get one flight Lists: name:${id}`)
         return list;
     }
 
@@ -39,21 +37,18 @@ export class ListService {
         const flightList: InsertFlightListDto = body;
         const listRes = await this.listRepository.insert(flightList)
 
-        this.log.log(`add flight List. affected rows:${body.data.length}`)
 
         return listRes.identifiers[0].id;
     }
 
     async updateFlightList(id: number, body: UpdateFlightListDto) {
         await this.listRepository.update(id, body)
-        this.log.log(`update flight list. id:${id}`)
         return id;
     }
 
     async deleteFlightList(id: number): Promise<number> {
         await this.listRepository.softDelete(id);
         await this.resultRepository.softDelete({ testId: id })
-        this.log.log(`update flight list. id:${id}`)
         return id;
     }
 }
