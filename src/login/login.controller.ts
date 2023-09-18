@@ -8,11 +8,14 @@ import { Logger } from 'winston';
 import { printWinstonLog } from 'logger/logger.factory';
 import { Roles } from 'common/auth/role.decorator';
 import { RolesGuard } from 'common/auth/role.guard';
+import { SHA256 } from 'crypto-js'
+import { ConfigService } from '@nestjs/config';
 
 @ApiTags('로그인 API')
 @Controller('auth')
 export class LoginController {
     constructor(private readonly loginService: LoginService,
+        private readonly config: ConfigService,
         @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger) { }
     @Post('login')
     @ApiOperation({ summary: "로그인", description: "로그인" })
@@ -25,17 +28,19 @@ export class LoginController {
                 module: LoginController.name,
                 ip: req.ip
             }, 'info')
-            const result = await this.loginService.login(id, pw);
+            console.log(SHA256(pw + this.config.get('SECRET_KEY')))
+            const hashedPW : string = pw + this.config.get('SECRET_KEY')
+            const result = await this.loginService.login(id, SHA256(hashedPW).toString());
             res.setHeader('Authorization', 'Bearer ' + result.token)
 
             res.cookie('jwt', result.token, {
                 httpOnly: true,
-                maxAge: 24 * 60 * 60 * 1000 // 1Day
+                maxAge: 3 * 60 * 60 * 1000 // 3 hour
             })
 
             res.cookie('userid', id, {
                 httpOnly: true,
-                maxAge: 24 * 60 * 60 * 1000 // 1Day
+                maxAge: 3 * 60 * 60 * 1000 // 1 hour
             })
 
             printWinstonLog(this.logger, {
@@ -74,7 +79,11 @@ export class LoginController {
             ip: req.ip
         }, 'info')
         res.cookie('jwt', '', {
-            maxAge: 0
+            maxAge: 0,
+        })
+
+        res.cookie('userid', '', {
+            maxAge: 0,
         })
         return res.send({
             message: 'logout success'

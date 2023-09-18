@@ -15,11 +15,14 @@ import { FrequencyModule } from 'domain/frequency/frequency.module';
 import { SiteModule } from 'domain/site/site.module';
 import { MapModule } from 'domain/map/map.module';
 import { LoggerModule } from 'logger/logger.module';
+import configuration from 'config/configuration';
 
 @Module({
   imports: [
     LoggerModule,
-    ConfigModule.forRoot({ isGlobal:true, envFilePath: `.development.env` }),
+    ConfigModule.forRoot({ isGlobal:true,
+      load:[configuration], 
+      envFilePath: process.env.NODE_ENV === 'production' ? '.production.env' : `.development.env` }),
     TypeOrmModule.forRootAsync({
       useClass: TypeOrmConfigService,
       inject:[LoginModule]
