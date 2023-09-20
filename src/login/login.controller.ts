@@ -28,7 +28,6 @@ export class LoginController {
                 module: LoginController.name,
                 ip: req.ip
             }, 'info')
-            console.log(SHA256(pw + this.config.get('SECRET_KEY')))
             const hashedPW : string = pw + this.config.get('SECRET_KEY')
             const result = await this.loginService.login(id, SHA256(hashedPW).toString());
             res.setHeader('Authorization', 'Bearer ' + result.token)

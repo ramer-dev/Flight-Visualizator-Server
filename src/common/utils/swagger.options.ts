@@ -11,7 +11,7 @@ export function setupSwagger(app: INestApplication): void {
     .setDescription("비행검사 시각화 서버 API")
     .setContact('신희상', 'https://github.com/ramer-dev', 'ramer-dev@kakao.com')
     .setVersion('1.1.5')
-    .setBasePath('/v1/api')
+    .setBasePath('/api/v1')
     .addBearerAuth({
         type: 'http',
         scheme:'bearer',
@@ -24,5 +24,5 @@ export function setupSwagger(app: INestApplication): void {
 
     const document = SwaggerModule.createDocument(app, options);
 
-    SwaggerModule.setup('v1/api/swagger', app, document);
+    SwaggerModule.setup('/api/v1/swagger', app, document);
 }

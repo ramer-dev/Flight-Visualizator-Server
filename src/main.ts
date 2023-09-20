@@ -11,16 +11,11 @@ import https from 'https';
 import path from 'path';
 async function bootstrap() {
 
-
-  // const httpsOptions = {
-  //   key: readFileSync('./localCA.pem'),
-  //   cert: readFileSync('./localhost.test.pem')
-
   // }
-  const httpsOptions = {
-    key: readFileSync(path.join(process.cwd(), 'src', 'key', 'cert.key')),
-    cert: readFileSync(path.join(process.cwd(), 'src', 'key', 'cert.crt'))
-  }
+  // const httpsOptions = {
+  //   key: readFileSync(path.join(process.cwd(), 'src', 'key', 'cert.key')),
+  //   cert: readFileSync(path.join(process.cwd(), 'src', 'key', 'cert.crt'))
+  // }
   const app = await NestFactory.create(AppModule, {});
   // const cspOptions = {
   //   directives: {
@@ -32,7 +27,7 @@ async function bootstrap() {
   // const xFrameOptions = {
 
   // }
-  app.setGlobalPrefix('/v1/api')
+  app.setGlobalPrefix('/api/v1')
   app.enableCors({
     origin: true,
     credentials: true,

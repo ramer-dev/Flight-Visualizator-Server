@@ -73,7 +73,7 @@ export class FileService {
 
         this.log.log(`awaiting OCR image \t :: ${file.originalname} `)
         try {
-            const response = await axios.post(`http://${this.config.get('DB_HOST')}:7001/`, form, {
+            const response = await axios.post(`http://${this.config.get('DB_HOST')}/ocr`, form, {
                 proxy:false,
                 headers: {
                     ...form.getHeaders(),
