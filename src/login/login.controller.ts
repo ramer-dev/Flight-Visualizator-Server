@@ -59,6 +59,9 @@ export class LoginController {
                 module: LoginController.name,
                 ip
             }, 'error')
+            return res.send({
+                message: 'fail',
+            })
         }
     }
 
