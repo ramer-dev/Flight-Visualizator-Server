@@ -1,5 +1,5 @@
 import { Controller, Post, Body, Res } from '@nestjs/common';
-import { Get, Inject, Req, UseGuards } from '@nestjs/common/decorators';
+import { Get, Inject, Query, Req, UseGuards } from '@nestjs/common/decorators';
 import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { LoginService } from './login.service';
@@ -22,14 +22,14 @@ export class LoginController {
     @ApiOperation({ summary: "로그인", description: "로그인" })
     @ApiOkResponse({ type: Number, description: "로그인 성공" })
     @ApiBadRequestResponse({ description: '아이디 비밀번호가 일치하지 않음' })
-    async login(@Body('id') id: string, @Body('pw') pw: string, @Req() req: Request, @Res() res: Response) {
+    async login(@Body('id') id: string, @Body('pw') pw: string, @RealIP() ip: string, @Res() res: Response) {
         try {
             printWinstonLog(this.logger, {
                 message: `id : ${id} | tried login`,
                 module: LoginController.name,
-                ip: req.ip
+                ip
             }, 'info')
-            const hashedPW : string = pw + this.config.get('SECRET_KEY')
+            const hashedPW: string = pw + this.config.get('SECRET_KEY')
             const result = await this.loginService.login(id, SHA256(hashedPW).toString());
             res.setHeader('Authorization', 'Bearer ' + result.token)
 
@@ -46,7 +46,7 @@ export class LoginController {
             printWinstonLog(this.logger, {
                 message: `${id} | login succeed`,
                 module: LoginController.name,
-                ip: req.ip
+                ip
             }, 'info')
 
             return res.send({
@@ -57,7 +57,7 @@ export class LoginController {
             printWinstonLog(this.logger, {
                 message: `${id} | failed login`,
                 module: LoginController.name,
-                ip: req.ip
+                ip
             }, 'error')
         }
     }
@@ -72,11 +72,11 @@ export class LoginController {
     @Roles(1)
     @UseGuards(RolesGuard)
     @Post('logout')
-    logout(@Res() res: Response, @Req() req: Request) {
+    logout(@Res() res: Response, @RealIP() ip: string) {
         printWinstonLog(this.logger, {
             message: `user logout`,
             module: LoginController.name,
-            ip: req.ip
+            ip: ip
         }, 'info')
         res.cookie('jwt', '', {
             maxAge: 0,
@@ -90,11 +90,34 @@ export class LoginController {
         })
     }
 
-    @Get('register')
-    register(@RealIP() ip: string, @Body('id') id: string, @Body('pw') pw : string){
-        
-        
-        console.log(ip)
+    @Post('register')
+    register(@RealIP() ip: string, @Body('id') id: string, @Body('pw') pw: string, @Body('username') name: string, @Body('digit') digit: string,) {
+        const hashedDigit = SHA256(digit + this.config.get("SECRET_KEY")).toString()
+        const hashedPW = SHA256(pw + this.config.get("SECRET_KEY")).toString()
+        this.loginService.register(id, hashedPW, name, hashedDigit);
+
         return ip
+    }
+
+    @Get('id')
+    verifyId(@RealIP() ip: string, @Query('id') id: string) {
+        return this.loginService.verifyId(id);
+    }
+
+    @Get('name')
+    verifyUsername(@RealIP() ip: string, @Query('username') name: string) {
+        return this.loginService.verifyUsername(name);
+    }
+
+    @Post('findPW')
+    findPW(@RealIP() ip: string, @Body('id') id: string, @Body('pw') pw: string, @Body('username') name: string, @Body('digit') digit: string) {
+        const hashedDigit = SHA256(digit + this.config.get("SECRET_KEY")).toString()
+        return this.loginService.findPW(id, name, hashedDigit);
+    }
+
+    @Post('pw')
+    setPW(@RealIP() ip: string, @Body('id') id: string, @Body('pw') pw) {
+        const hashedPW = SHA256(pw + this.config.get("SECRET_KEY")).toString()
+        return this.loginService.setPW(id, hashedPW)
     }
 }

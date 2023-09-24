@@ -10,4 +10,8 @@ export class User {
     role: number;
     @Column()
     refreshToken:string;
+    @Column()
+    digit:string;
+    @Column()
+    username:string;
 } 
