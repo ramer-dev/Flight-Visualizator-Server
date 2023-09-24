@@ -19,7 +19,7 @@ export class ListService {
     ) { }
 
     async getAllList(): Promise<FlightList[]> {
-        const res = await this.listRepository.find({ order: { id: 'desc' } });
+        const res = await this.listRepository.find({ order: { testDate: 'desc' } });
         return res;
     }
 

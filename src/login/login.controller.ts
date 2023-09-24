@@ -10,6 +10,7 @@ import { Roles } from 'common/auth/role.decorator';
 import { RolesGuard } from 'common/auth/role.guard';
 import { SHA256 } from 'crypto-js'
 import { ConfigService } from '@nestjs/config';
+import { RealIP } from 'nestjs-real-ip';
 
 @ApiTags('로그인 API')
 @Controller('auth')
@@ -87,5 +88,13 @@ export class LoginController {
         return res.send({
             message: 'logout success'
         })
+    }
+
+    @Get('register')
+    register(@RealIP() ip: string, @Body('id') id: string, @Body('pw') pw : string){
+        
+        
+        console.log(ip)
+        return ip
     }
 }
