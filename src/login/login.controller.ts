@@ -94,7 +94,7 @@ export class LoginController {
     }
 
     @Post('register')
-    register(@RealIP() ip: string, @Body('id') id: string, @Body('pw') pw: string, @Body('username') name: string, @Body('digit') digit: string,) {
+    register(@RealIP() ip: string, @Body('id') id: string, @Body('pw') pw: string, @Body('username') name: string, @Body('digit') digit: number) {
         const hashedDigit = SHA256(digit + this.config.get("SECRET_KEY")).toString()
         const hashedPW = SHA256(pw + this.config.get("SECRET_KEY")).toString()
         this.loginService.register(id, hashedPW, name, hashedDigit);
@@ -113,13 +113,23 @@ export class LoginController {
     }
 
     @Post('findPW')
-    findPW(@RealIP() ip: string, @Body('id') id: string, @Body('pw') pw: string, @Body('username') name: string, @Body('digit') digit: string) {
+    findPW(@RealIP() ip: string, @Body('id') id: string, @Body('digit') digit: string) {
+        printWinstonLog(this.logger, {
+            message: `id : ${id} | find PW`,
+            module: LoginController.name,
+            ip
+        }, 'info')
         const hashedDigit = SHA256(digit + this.config.get("SECRET_KEY")).toString()
-        return this.loginService.findPW(id, name, hashedDigit);
+        return this.loginService.findPW(id, hashedDigit);
     }
 
     @Post('pw')
     setPW(@RealIP() ip: string, @Body('id') id: string, @Body('pw') pw) {
+        printWinstonLog(this.logger, {
+            message: `id : ${id} | set new PW`,
+            module: LoginController.name,
+            ip
+        }, 'info')
         const hashedPW = SHA256(pw + this.config.get("SECRET_KEY")).toString()
         return this.loginService.setPW(id, hashedPW)
     }

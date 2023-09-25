@@ -39,32 +39,39 @@ export class LoginService {
     async verifyId(id: string) {
         const verify = await this.accountRepository.findOne({ where: { id } })
         if (verify) {
-            return false;
+            return true;
         } else {
-            return true
+            return false
         }
     }
 
     async verifyUsername(name: string) {
-        const verify = await this.accountRepository.findOne({ where: { username:name } })
+        const verify = await this.accountRepository.findOne({ where: { username: name } })
         if (verify) {
-            return false;
+            return true;
         } else {
-            return true
+            return false
         }
     }
 
-    async findPW(id: string, name: string, digit: string){
-        const verify = await this.accountRepository.findOne({ where: { id, username:name, digit } })
+    async findPW(id: string, digit: string) {
+        const verify = await this.accountRepository.findOne({ where: { id, digit } })
         if (verify) {
-            return false;
+            return true;
         } else {
-            return true
+            return false;
         }
     }
 
-    async setPW(id:string, pw:string){
-        return await this.accountRepository.update({id}, {pw})
+    async setPW(id: string, pw: string) {
+
+        const res = await this.accountRepository.update({ id }, { pw })
+        if(res){
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
 }
