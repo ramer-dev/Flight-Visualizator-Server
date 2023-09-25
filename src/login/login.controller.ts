@@ -35,11 +35,15 @@ export class LoginController {
 
             res.cookie('jwt', result.token, {
                 httpOnly: true,
+                sameSite:'none',
+                secure:true,
                 maxAge: 3 * 60 * 60 * 1000 // 3 hour
             })
 
             res.cookie('userid', id, {
                 httpOnly: true,
+                sameSite:'none',
+                secure:true,
                 maxAge: 3 * 60 * 60 * 1000 // 1 hour
             })
 
