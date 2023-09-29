@@ -12,7 +12,7 @@ import xlsx from 'xlsx'
 
 export class FileService {
     constructor(private config: ConfigService) { }
-    COORDINATE_ERROR_VARIANT = 0.25;
+    // COORDINATE_ERROR_VARIANT = 0.25;
 
     log = new Logger('FileService');
 
@@ -39,7 +39,6 @@ export class FileService {
         if (!file) {
             throw new BadRequestException('파일이 존재하지 않습니다..');
         }
-        this.log.log(`file Uploaded fileName: ${file.filename}`)
         return { filePath: file.filename };
     }
 
@@ -71,10 +70,9 @@ export class FileService {
         const form = new formData();
         form.append('data', fs.createReadStream(file.path), file.originalname)
 
-        this.log.log(`awaiting OCR image \t :: ${file.originalname} `)
         try {
             const response = await axios.post(`http://${this.config.get('DB_HOST')}/ocr`, form, {
-                proxy:false,
+                proxy: false,
                 headers: {
                     ...form.getHeaders(),
                 },
@@ -102,30 +100,34 @@ export class FileService {
         for (const i of Object.keys(firstSheet)) {
             const cellValue = firstSheet[i].v;
             if (!cellValue || !cellValue.substring) { continue }
-
             const numberParts = cellValue.substring(1).split(' : ').map(Number)
-            const numberValue = Number((numberParts[0] + numberParts[1] / 100 + numberParts[2] / 10000).toFixed(6))
-            switch (i[0]) {
-                case 'E':
-                    const currentLat = this.convertToWGS(numberValue);
-                    if (lastLat !== null && Math.abs(lastLat - currentLat) > this.COORDINATE_ERROR_VARIANT) {
-                        hasSkipped = true;
-                        continue;
-                    }
-                    lastLat = currentLat;
-                    break;
-                case 'F':
-                    const currentLng = this.convertToWGS(numberValue);
-                    if (lastLng !== null && Math.abs(lastLng - currentLng) > this.COORDINATE_ERROR_VARIANT) {
-                        hasSkipped = true;
-                        continue;
-                    }
-                    lastLng = currentLng;
-                    break;
-                case 'G':
-                    if (lastLat && lastLng)
-                        data.push({ lat: lastLat, lng: lastLng, height: +cellValue });
-                    break;
+            if (!isNaN(numberParts[0])) {
+                
+                const numberValue = Number((numberParts[0] + numberParts[1] / 100 + numberParts[2] / 10000).toFixed(6))
+                switch (i[0]) {
+                    case 'E':
+                        const currentLat = this.convertToWGS(numberValue);
+                        // if (lastLat !== null && Math.abs(lastLat - currentLat) > this.COORDINATE_ERROR_VARIANT) {
+                        //     hasSkipped = true;
+                        //     continue;
+                        // }
+                        lastLat = currentLat;
+                        break;
+                    case 'F':
+                        const currentLng = this.convertToWGS(numberValue);
+                        // if (lastLng !== null && Math.abs(lastLng - currentLng) > this.COORDINATE_ERROR_VARIANT) {
+                        //     hasSkipped = true;
+                        //     continue;
+                        // }
+                        lastLng = currentLng;
+                        break;
+                    case 'G':
+                        if (lastLat && lastLng){
+                            const height = isNaN(Number(cellValue)) ? 0 : +cellValue;
+                            data.push({ lat: lastLat, lng: lastLng, height: height });
+                        }
+                        break;
+                }
             }
         }
 
@@ -160,16 +162,16 @@ export class FileService {
                     // 고도
                     case 8:
                         const currentLat = +row[i]
-                        if (lastLat !== null && Math.abs(lastLat - currentLat) > this.COORDINATE_ERROR_VARIANT) {
-                            continue;
-                        }
+                        // if (lastLat !== null && Math.abs(lastLat - currentLat) > this.COORDINATE_ERROR_VARIANT) {
+                        //     continue;
+                        // }
                         lastLat = currentLat;
                         break;
                     case 9:
                         const currentLng = +row[i]
-                        if (lastLng !== null && Math.abs(lastLng - currentLng) > this.COORDINATE_ERROR_VARIANT) {
-                            continue;
-                        }
+                        // if (lastLng !== null && Math.abs(lastLng - currentLng) > this.COORDINATE_ERROR_VARIANT) {
+                        //     continue;
+                        // }
                         lastLng = currentLng;
                         break;
 

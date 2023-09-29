@@ -24,6 +24,7 @@ import { Roles } from 'common/auth/role.decorator';
 import { RolesGuard } from 'common/auth/role.guard';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { printWinstonLog } from 'logger/logger.factory';
+import { RealIP } from 'nestjs-real-ip';
 
 @Controller('file')
 @ApiTags('파일 업로드 API')
@@ -47,10 +48,10 @@ export class FileController {
     uploadRouteFile(
         @UploadedFile()
         file: Express.Multer.File,
-        @Req() req: Request,
+        @RealIP() ip: string,
     ) {
         printWinstonLog(this.logger, {
-            ip: req.ip,
+            ip: ip,
             module: 'FILE',
             message: `[POST] ${file.originalname} | Route upload`
         }, 'info')
@@ -59,9 +60,9 @@ export class FileController {
 
     @Get('route')
     @ApiOperation({ summary: '경로 Parse API', description: "경로를 전달한다." })
-    getRouteFromFile(@Query('filename') filename: string, @Req() req: Request) {
+    getRouteFromFile(@Query('filename') filename: string, @RealIP() ip: string) {
         printWinstonLog(this.logger, {
-            ip: req.ip,
+            ip: ip,
             module: 'FILE',
             message: `[GET] ${filename} | Requested route`
         }, 'info')
@@ -83,9 +84,9 @@ export class FileController {
         }
     }))
     async uploadOCRFile(@UploadedFile() file: Express.Multer.File,
-        @Req() req: Request) {
+        @RealIP() ip: string) {
         printWinstonLog(this.logger, {
-            ip: req.ip,
+            ip: ip,
             module: 'FILE',
             message: `[POST] ${file.originalname} | OCR image uploading`
         }, 'info')
