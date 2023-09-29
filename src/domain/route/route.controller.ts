@@ -7,6 +7,7 @@ import { UpdateRouteListDto } from "common/dto/route/route-list.update.dto";
 import { Request } from "express";
 import { printWinstonLog } from "logger/logger.factory";
 import { WINSTON_MODULE_PROVIDER } from "nest-winston";
+import { RealIP } from "nestjs-real-ip";
 import { RouteService } from "./route.service";
 
 @Controller('route')
@@ -18,11 +19,11 @@ export class RouteController {
     ) { }
 
     @Get()
-    getEntireRoute(@Req() req: Request) {
+    getEntireRoute(@RealIP() ip: string) {
         printWinstonLog(this.logger, {
             message: `[GET] Entire Route`,
             module: RouteController.name,
-            ip: req.ip
+            ip: ip
         }, 'info')
         try {
             return this.routeService.getEntireRoute();
@@ -30,17 +31,17 @@ export class RouteController {
             printWinstonLog(this.logger, {
                 message: `[GET] Failed to Get Entire Route`,
                 module: RouteController.name,
-                ip: req.ip
+                ip: ip
             }, 'error')
         }
     }
 
     @Get(':id')
-    getSingleRoute(@Param('id') id: number, @Req() req: Request) {
+    getSingleRoute(@Param('id') id: number, @RealIP() ip: string) {
         printWinstonLog(this.logger, {
             message: `[GET] Single Route | id : ${id}`,
             module: RouteController.name,
-            ip: req.ip
+            ip: ip
         }, 'info')
         try {
             return this.routeService.getSingleRoute(id)
@@ -48,7 +49,7 @@ export class RouteController {
             printWinstonLog(this.logger, {
                 message: `[GET] Failed to Get Single Route | id : ${id}`,
                 module: RouteController.name,
-                ip: req.ip
+                ip: ip
             }, 'error')
         }
     }
@@ -56,11 +57,11 @@ export class RouteController {
     @Roles(2)
     @UseGuards(RolesGuard)
     @Post()
-    addRoute(@Body() body: InsertRouteListDto, @Req() req: Request) {
+    addRoute(@Body() body: InsertRouteListDto, @RealIP() ip: string) {
         printWinstonLog(this.logger, {
             message: `[POST] Add Route ${body.routeName}}`,
             module: RouteController.name,
-            ip: req.ip
+            ip: ip
         }, 'info')
         try {
             return this.routeService.addSingleRoute(body);
@@ -68,18 +69,18 @@ export class RouteController {
             printWinstonLog(this.logger, {
                 message: `[POST] Failed to Add Route ${body.routeName}`,
                 module: RouteController.name,
-                ip: req.ip
+                ip: ip
             }, 'error')
         }
     }
     @Roles(2)
     @UseGuards(RolesGuard)
     @Patch(':id')
-    updateRoute(@Param('id') id: number, @Body() body: InsertRouteListDto, @Req() req: Request) {
+    updateRoute(@Param('id') id: number, @Body() body: InsertRouteListDto, @RealIP() ip: string) {
         printWinstonLog(this.logger, {
             message: `[PATCH] Update Route ${body.routeName}}`,
             module: RouteController.name,
-            ip: req.ip
+            ip: ip
         }, 'info')
         try {
             return this.routeService.updateRoute(id, body);
@@ -87,18 +88,18 @@ export class RouteController {
             printWinstonLog(this.logger, {
                 message: `[PATCH] Failed to Update Route ${body.routeName}`,
                 module: RouteController.name,
-                ip: req.ip
+                ip: ip
             }, 'error')
         }
     }
     @Roles(3)
     @UseGuards(RolesGuard)
     @Delete(':id')
-    deleteRoute(@Param('id') id: number, @Req() req: Request) {
+    deleteRoute(@Param('id') id: number, @RealIP() ip: string) {
         printWinstonLog(this.logger, {
             message: `[DELETE] Route | id : ${id}`,
             module: RouteController.name,
-            ip: req.ip
+            ip: ip
         }, 'info')
         try {
             return this.routeService.deleteRoute(id);
@@ -106,7 +107,7 @@ export class RouteController {
             printWinstonLog(this.logger, {
                 message: `[DELETE] Failed to Delete Route | id : ${id}`,
                 module: RouteController.name,
-                ip: req.ip
+                ip: ip
             }, 'error')
         }
     }

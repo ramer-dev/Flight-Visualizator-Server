@@ -8,6 +8,7 @@ import { Notice } from 'entities/notice.entity';
 import { Request } from 'express';
 import { printWinstonLog } from 'logger/logger.factory';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { RealIP } from 'nestjs-real-ip';
 import { NoticeService } from './notice.service';
 
 @Controller('notice')
@@ -25,11 +26,11 @@ export class NoticeController {
         type: [Notice],
         description: '공지사항 조회 성공'
     })
-    getAllNotice(@Req() req: Request, @Query('limit') limit?: number, @Query('skip') skip?: number) {
+    getAllNotice(@RealIP() ip: string, @Query('limit') limit?: number, @Query('skip') skip?: number) {
         printWinstonLog(this.logger, {
             message: `[GET] Entire Notice`,
             module: NoticeController.name,
-            ip: req.ip
+            ip: ip
         }, 'info')
         try {
             return this.noticeService.getNotice(limit ? limit : 0, skip ? skip : 0);
@@ -37,7 +38,7 @@ export class NoticeController {
             printWinstonLog(this.logger, {
                 message: `[GET] Failed to Get Entire Notice`,
                 module: NoticeController.name,
-                ip: req.ip
+                ip: ip
             }, 'error')
         }
     }
@@ -50,20 +51,20 @@ export class NoticeController {
         type: Number,
         description: '공지사항 추가 성공'
     })
-    addNotice(@Req() req: Request, @Body() body: InsertNoticeDto) {
+    addNotice(@RealIP() ip: string, @Body() body: InsertNoticeDto, @Req() req: Request) {
 
         printWinstonLog(this.logger, {
             message: `[POST] Add Notice ${body.title}`,
             module: NoticeController.name,
-            ip: req.ip
+            ip: ip
         }, 'info')
         try {
-            return this.noticeService.addNotice(body);
+            return this.noticeService.addNotice({...body, user:req.cookies['userid']});
         } catch (e) {
             printWinstonLog(this.logger, {
                 message: `[GET] Failed to Add Notice ${body.title}`,
                 module: NoticeController.name,
-                ip: req.ip
+                ip: ip
             }, 'error')
         }
     }
@@ -79,11 +80,11 @@ export class NoticeController {
     @ApiNotFoundResponse({
         description: '공지사항 수정 실패. 해당 ID 존재하지 않음.'
     })
-    updateNotice(@Param('id') id: number, @Body() body: UpdateNoticeDto, @Req() req: Request) {
+    updateNotice(@Param('id') id: number, @Body() body: UpdateNoticeDto, @RealIP() ip: string, @Req() req: Request) {
         printWinstonLog(this.logger, {
             message: `[PATCH] Update Notice | id : ${id}`,
             module: NoticeController.name,
-            ip: req.ip
+            ip: ip
         }, 'info')
         try {
             return this.noticeService.updateNotice(id, { ...body, user: req.cookies['userid'] });
@@ -92,7 +93,7 @@ export class NoticeController {
             printWinstonLog(this.logger, {
                 message: `[PATCH] Failed to Update Notice | id : ${id}`,
                 module: NoticeController.name,
-                ip: req.ip
+                ip: ip
             }, 'error')
         } 
     }
@@ -108,11 +109,11 @@ export class NoticeController {
     @ApiNotFoundResponse({
         description: '공지사항 삭제 실패. 해당 ID 존재하지 않음.'
     })
-    deleteNotice(@Req() req: Request, @Param('id') id: number) {
+    deleteNotice(@RealIP() ip: string, @Param('id') id: number) {
         printWinstonLog(this.logger, {
             message: `[DELETE] Notice | id : ${id}`,
             module: NoticeController.name,
-            ip: req.ip
+            ip: ip
         }, 'info')
         try {
             return this.noticeService.deleteNotice(id)
@@ -120,7 +121,7 @@ export class NoticeController {
             printWinstonLog(this.logger, {
                 message: `[PATCH] Failed to Delete Notice | id : ${id}`,
                 module: NoticeController.name,
-                ip: req.ip
+                ip: ip
             }, 'error')
         }  
     }

@@ -44,7 +44,7 @@ export class LoginController {
                 httpOnly: true,
                 sameSite:'none',
                 secure:true,
-                maxAge: 3 * 60 * 60 * 1000 // 1 hour
+                maxAge: 3 * 60 * 60 * 1000 // 3 hour
             })
 
             printWinstonLog(this.logger, {
@@ -101,6 +101,11 @@ export class LoginController {
     register(@RealIP() ip: string, @Body('id') id: string, @Body('pw') pw: string, @Body('username') name: string, @Body('digit') digit: number) {
         const hashedDigit = SHA256(digit + this.config.get("SECRET_KEY")).toString()
         const hashedPW = SHA256(pw + this.config.get("SECRET_KEY")).toString()
+        printWinstonLog(this.logger, {
+            message: `id : ${id} | username : ${name} has registered.`,
+            module: LoginController.name,
+            ip
+        }, 'info')
         this.loginService.register(id, hashedPW, name, hashedDigit);
 
         return ip

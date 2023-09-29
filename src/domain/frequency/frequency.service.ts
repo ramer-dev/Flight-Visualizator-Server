@@ -7,7 +7,6 @@ import { Repository } from "typeorm";
 
 @Injectable()
 export class FrequencyService {
-    log = new Logger('FrequencyService')
 
     constructor(
         @InjectRepository(Frequency)
@@ -27,7 +26,6 @@ export class FrequencyService {
     }
 
     updateFreq(id: number, body: UpdateFrequencyDto) {
-        this.log.log(`주파수 업데이트 ${id}`)
         return this.freqRepository.update({frequencyId:id}, body);
     }
 

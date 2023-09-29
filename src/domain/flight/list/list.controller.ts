@@ -11,6 +11,7 @@ import { ListService } from "./list.service";
 import { Request } from "express";
 import { printWinstonLog } from "logger/logger.factory";
 import { WINSTON_MODULE_PROVIDER } from "nest-winston";
+import { RealIP } from "nestjs-real-ip";
 
 @Controller('flight/list')
 @ApiTags('비행검사 목록 API')
@@ -25,9 +26,9 @@ export class ListController {
     // @UseGuards(JwtAuthGuard, RolesGuard)
     @ApiOperation({ summary: '전체 목록 조회', description: '전체 목록 조회시에는 data가 없음.' })
     @ApiOkResponse({ type: [FlightList], description: '비행검사 전체 조회 성공' })
-    getAllList(@Req() req: Request) {
+    getAllList(@RealIP() ip: string) {
         printWinstonLog(this.logger, {
-            ip: req.ip,
+            ip: ip,
             module: ListController.name,
             message: `[GET] Entire Lists`
         }, 'info')
@@ -35,7 +36,7 @@ export class ListController {
             return this.listService.getAllList();
         } catch (e) {
             printWinstonLog(this.logger, {
-                ip: req.ip,
+                ip: ip,
                 module: ListController.name,
                 message: `[GET] Failed to Get Entire List`
             }, 'error')
@@ -50,9 +51,9 @@ export class ListController {
         name:'p',
         required:false,
     })
-    getOneItem(@Param('id') id: number, @Req() req: Request, @Query('p') page: number) {
+    getOneItem(@Param('id') id: number, @RealIP() ip: string, @Query('p') page: number) {
         printWinstonLog(this.logger, {
-            ip: req.ip,
+            ip: ip,
             module: ListController.name,
             message: `[GET] ${id} List and Results`
         }, 'info')
@@ -60,7 +61,7 @@ export class ListController {
             return this.listService.getOneItem(id, page);
         } catch (e) {
             printWinstonLog(this.logger, {
-                ip: req.ip,
+                ip: ip,
                 module: ListController.name,
                 message: `[GET] Failed to Get ${id}'s List and Results`
             }, 'error')
@@ -73,9 +74,9 @@ export class ListController {
     @ApiOperation({ summary: '비행 검사 추가', description: ' 비행 검사 결과 추가' })
     @ApiOkResponse({ type: Number, description: '비행검사 전체 조회 성공' })
     @ApiBadRequestResponse({ description: '요청 형식이 잘못됨' })
-    async addFlightList(@Body() body: FlightResultAddFormDto, @Req() req: Request) {
+    async addFlightList(@Body() body: FlightResultAddFormDto, @RealIP() ip: string) {
         printWinstonLog(this.logger, {
-            ip: req.ip,
+            ip: ip,
             module: ListController.name,
             message: `[POST] Add new flight List and Results`
         }, 'info')
@@ -87,7 +88,7 @@ export class ListController {
             return await this.resultService.addFlightResult(body.data);
         } catch (e) {
             printWinstonLog(this.logger, {
-                ip: req.ip,
+                ip: ip,
                 module: ListController.name,
                 message: `[POST] Failed to Add flight List and Results`
             }, 'error')
@@ -102,9 +103,9 @@ export class ListController {
     @ApiOkResponse({ type: Number, description: '비행검사 수정 성공' })
     @ApiNotFoundResponse({ description: '해당하는 ID가 존재하지 않음' })
     @ApiBadRequestResponse({ description: '요청 형식이 잘못됨' })
-    async updateFlightList(@Param('id') id: number, @Body() body: UpdateFlightListDto, @Req() req: Request) {
+    async updateFlightList(@Param('id') id: number, @Body() body: UpdateFlightListDto, @RealIP() ip: string) {
         printWinstonLog(this.logger, {
-            ip: req.ip,
+            ip: ip,
             module: ListController.name,
             message: `[PATCH] Update Flight List ID : ${id}`
         }, 'info')
@@ -113,7 +114,7 @@ export class ListController {
             return await this.listService.updateFlightList(id, body);
         } catch (e) {
             printWinstonLog(this.logger, {
-                ip: req.ip,
+                ip: ip,
                 module: ListController.name,
                 message: `[PATCH] Failed to Update Flight List ID : ${id}`
             }, 'error')
@@ -125,17 +126,17 @@ export class ListController {
     @UseGuards(RolesGuard)
     @ApiOperation({ summary: '비행검사 삭제', description: '비행검사 항목 삭제할 때 사용' })
     @ApiNotFoundResponse({ description: '해당하는 ID가 존재하지 않음' })
-    deleteFlightList(@Param('id') id: number, @Req() req: Request) {
+    deleteFlightList(@Param('id') id: number, @RealIP() ip: string) {
         try {
             printWinstonLog(this.logger, {
-                ip: req.ip,
+                ip: ip,
                 module: ListController.name,
                 message: `[DELETE] Flight List ID : ${id}`
             }, 'info')
             return this.listService.deleteFlightList(id);
         } catch (e) {
             printWinstonLog(this.logger, {
-                ip: req.ip,
+                ip: ip,
                 module: ListController.name,
                 message: `[DELETE] Failed to Delete Flight List ID : ${id}`
             }, 'error')

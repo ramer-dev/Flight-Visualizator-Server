@@ -8,6 +8,7 @@ import { Area } from "entities/area.entity";
 import { Request } from "express";
 import { printWinstonLog } from "logger/logger.factory";
 import { WINSTON_MODULE_PROVIDER } from "nest-winston";
+import { RealIP } from "nestjs-real-ip";
 import { AreaService } from "./area.service";
 
 @Controller('area')
@@ -24,11 +25,11 @@ export class AreaController {
         type: [Area],
         description: '공역 조회 성공'
     })
-    getEntireArea(@Query('valid') valid: boolean, @Req() req: Request) {
+    getEntireArea(@Query('valid') valid: boolean, @RealIP() ip: string) {
         printWinstonLog(this.logger, {
             message: `[GET] Entire Area`,
             module: AreaController.name,
-            ip: req.ip
+            ip: ip
         }, 'info')
 
         try {
@@ -38,7 +39,7 @@ export class AreaController {
             printWinstonLog(this.logger, {
                 message: `[GET] Failed to Get Entire Area`,
                 module: AreaController.name,
-                ip: req.ip
+                ip: ip
             }, 'error')
         }
     }
@@ -51,11 +52,11 @@ export class AreaController {
         type: Number,
         description: '공역 추가 성공'
     })
-    addArea(@Body() body: InsertAreaDto, @Req() req: Request) {
+    addArea(@Body() body: InsertAreaDto, @RealIP() ip: string) {
         printWinstonLog(this.logger, {
             message: `[POST] Add Area : ${body.areaName}`,
             module: AreaController.name,
-            ip: req.ip
+            ip: ip
         }, 'info')
         try {
             return this.areaService.addArea(body);
@@ -63,7 +64,7 @@ export class AreaController {
             printWinstonLog(this.logger, {
                 message: `[POST] Failed to Add Area : ${body.areaName}`,
                 module: AreaController.name,
-                ip: req.ip
+                ip: ip
             }, 'error')
         }
     }
@@ -79,11 +80,11 @@ export class AreaController {
     @ApiNotFoundResponse({
         description: '공역 수정 실패. 해당 ID 존재하지 않음.'
     })
-    updateArea(@Param('id') id: number, @Body() body: UpdateAreaDto, @Req() req : Request) {
+    updateArea(@Param('id') id: number, @Body() body: UpdateAreaDto, @RealIP() ip: string) {
         printWinstonLog(this.logger, {
             message: `[PATCH] Update Area : ${body.areaName}`,
             module: AreaController.name,
-            ip: req.ip
+            ip: ip
         }, 'info')
         try {
             return this.areaService.updateArea(id, body);
@@ -91,7 +92,7 @@ export class AreaController {
             printWinstonLog(this.logger, {
                 message: `[PATCH] Failed to Add Area : ${body.areaName}`,
                 module: AreaController.name,
-                ip: req.ip
+                ip: ip
             }, 'error')
         }
     }
@@ -107,11 +108,11 @@ export class AreaController {
     @ApiNotFoundResponse({
         description: '공역 삭제 실패. 해당 ID 존재하지 않음.'
     })
-    deleteArea(@Param('id') id: number, @Req() req: Request) {
+    deleteArea(@Param('id') id: number,  @RealIP() ip: string) {
         printWinstonLog(this.logger, {
             message: `[DELETE] Delete Area : ${id}`,
             module: AreaController.name,
-            ip: req.ip
+            ip: ip
         }, 'info')
 
         try {
@@ -121,7 +122,7 @@ export class AreaController {
             printWinstonLog(this.logger, {
                 message: `[DELETE] Failed to Delete Area : ${id}`,
                 module: AreaController.name,
-                ip: req.ip
+                ip: ip
             }, 'error')
         }
     }

@@ -8,6 +8,7 @@ import { ResultController } from "domain/flight/result/result.controller";
 import { Request } from "express";
 import { printWinstonLog } from "logger/logger.factory";
 import { WINSTON_MODULE_PROVIDER } from "nest-winston";
+import { RealIP } from "nestjs-real-ip";
 import { FrequencyService } from "./frequency.service";
 
 @Controller('freq')
@@ -19,9 +20,9 @@ export class FrequencyController {
     ) { }
 
     @Get()
-    getEntireFreq(@Req() req: Request) {
+    getEntireFreq(@RealIP() ip: string) {
         printWinstonLog(this.logger, {
-            ip: req.ip,
+            ip: ip,
             module: FrequencyController.name,
             message: `[GET] Entire Frequency`
         }, 'info')
@@ -29,7 +30,7 @@ export class FrequencyController {
             return this.freqService.getEntireFreq();
         } catch (e) {
             printWinstonLog(this.logger, {
-                ip: req.ip,
+                ip: ip,
                 module: FrequencyController.name,
                 message: `[GET] Failed to Get Entire Frequency`
             }, 'error')
@@ -38,9 +39,9 @@ export class FrequencyController {
     }
 
     @Get(':id')
-    getSingleFreq(@Req() req: Request, @Param('id') id: number) {
+    getSingleFreq(@RealIP() ip: string, @Param('id') id: number) {
         printWinstonLog(this.logger, {
-            ip: req.ip,
+            ip: ip,
             module: FrequencyController.name,
             message: `[GET] Single Frequency ID : ${id}`
         }, 'info')
@@ -48,7 +49,7 @@ export class FrequencyController {
             return this.freqService.getSingleFreq(id);
         } catch (e) {
             printWinstonLog(this.logger, {
-                ip: req.ip,
+                ip: ip,
                 module: FrequencyController.name,
                 message: `[GET] Failed to Get Single Frequency ID : ${id}`
             }, 'error')
@@ -56,9 +57,9 @@ export class FrequencyController {
     }
 
     @Post()
-    addFreq(@Req() req: Request, @Body() body: InsertFrequencyDto) {
+    addFreq(@RealIP() ip: string, @Body() body: InsertFrequencyDto) {
         printWinstonLog(this.logger, {
-            ip: req.ip,
+            ip: ip,
             module: FrequencyController.name,
             message: `[POST] Add Frequency ${body.frequency}`
         }, 'info')
@@ -66,7 +67,7 @@ export class FrequencyController {
             return this.freqService.addFreq(body);
         } catch (e) {
             printWinstonLog(this.logger, {
-                ip: req.ip,
+                ip: ip,
                 module: FrequencyController.name,
                 message: `[POST] Failed to Add Frequency ${body.frequency}`
             }, 'error')
@@ -76,9 +77,9 @@ export class FrequencyController {
     @Roles(2)
     @UseGuards(RolesGuard)
     @Patch(':id')
-    updateFreq(@Req() req: Request, @Param('id') id: number, @Body() body: UpdateFrequencyDto) {
+    updateFreq(@RealIP() ip: string, @Param('id') id: number, @Body() body: UpdateFrequencyDto) {
         printWinstonLog(this.logger, {
-            ip: req.ip,
+            ip: ip,
             module: FrequencyController.name,
             message: `[PATCH] Update Frequency ${body.frequency}`
         }, 'info')
@@ -86,7 +87,7 @@ export class FrequencyController {
             return this.freqService.updateFreq(id, body)
         } catch (e) {
             printWinstonLog(this.logger, {
-                ip: req.ip,
+                ip: ip,
                 module: FrequencyController.name,
                 message: `[PATCH] Failed to Update Frequency ${body.frequency}`
             }, 'error')
@@ -96,9 +97,9 @@ export class FrequencyController {
     @Roles(3)
     @UseGuards(RolesGuard)
     @Delete(':id')
-    deleteFreq(@Req() req: Request, @Param('id') id: number) {
+    deleteFreq(@RealIP() ip: string, @Param('id') id: number) {
         printWinstonLog(this.logger, {
-            ip: req.ip,
+            ip: ip,
             module: FrequencyController.name,
             message: `[DELETE] Frequency | id : ${id}`
         }, 'info')
@@ -106,7 +107,7 @@ export class FrequencyController {
             return this.freqService.deleteFreq(id);
         } catch (e) {
             printWinstonLog(this.logger, {
-                ip: req.ip,
+                ip: ip,
                 module: FrequencyController.name,
                 message: `[PATCH] Failed to Delete Frequency | id : ${id}`
             }, 'error')

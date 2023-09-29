@@ -12,6 +12,7 @@ import { PointType } from "common/dto/coordinate.types";
 import { printWinstonLog } from "logger/logger.factory";
 import { WINSTON_MODULE_PROVIDER } from "nest-winston";
 import { Request } from "express";
+import { RealIP } from "nestjs-real-ip";
 
 
 @Controller('flight/result')
@@ -23,9 +24,9 @@ export class ResultController {
     @Get()
     @ApiOperation({ summary: "비행검사 결과 전체 조회", description: "비행검사 결과 전체 조회, 페이징 기능 있음" })
     @ApiOkResponse({ type: [FlightResult], description: '비행검사 결과 전체 조회 성공' })
-    getFlightResultAll(@Req() req: Request, @Query('take') take: number) {
+    getFlightResultAll(@RealIP() ip: string, @Query('take') take: number) {
         printWinstonLog(this.logger, {
-            ip: req.ip,
+            ip: ip,
             module: ResultController.name,
             message: `[GET] Entire Results`
         }, 'info')
@@ -33,7 +34,7 @@ export class ResultController {
             return this.resultService.getAllResult(take);
         } catch (e) {
             printWinstonLog(this.logger, {
-                ip: req.ip,
+                ip: ip,
                 module: ResultController.name,
                 message: `[GET] Failed to Get Entire Results`
             }, 'error')
@@ -44,9 +45,9 @@ export class ResultController {
     @ApiOperation({ summary: "비행검사 결과 검색", description: "비행검사 결과 검색" })
     @ApiOkResponse({ type: [FlightResult], description: "비행검사 결과 검색 성공" })
     @ApiBadRequestResponse({ description: 'body 형식이 올바르지 않음' })
-    getSearchResult(@Body() body: SearchDto, @Req() req: Request) {
+    getSearchResult(@Body() body: SearchDto, @RealIP() ip: string) {
         printWinstonLog(this.logger, {
-            ip: req.ip,
+            ip: ip,
             module: ResultController.name,
             message: `[GET] Search Results`
         }, 'info')
@@ -54,7 +55,7 @@ export class ResultController {
             return this.resultService.getSearchResult(body);
         } catch (e) {
             printWinstonLog(this.logger, {
-                ip: req.ip,
+                ip: ip,
                 module: ResultController.name,
                 message: `[GET] Failed to Get Search Results`
             }, 'error')
@@ -65,9 +66,9 @@ export class ResultController {
     @ApiOperation({ summary: "비행검사 좌표 분석", description: "비행검사 결과 삭제" })
     @ApiOkResponse({ type: Number, description: "비행검사 결과 삭제 성공" })
     @ApiNotFoundResponse({ description: 'id가 존재하지 않음' })
-    findPointsWithinRadius(@Req() req: Request, @Body('point') point: PointType, @Body('distance') distance: number) {
+    findPointsWithinRadius(@RealIP() ip: string, @Body('point') point: PointType, @Body('distance') distance: number) {
         printWinstonLog(this.logger, {
-            ip: req.ip,
+            ip: ip,
             module: ResultController.name,
             message: `[POST] Get Nearby Results : (${point.lat}|${point.lng}) ${distance}`
         }, 'info')
@@ -75,7 +76,7 @@ export class ResultController {
             return this.resultService.findPointsWithinRadius(point, distance);
         } catch (e) {
             printWinstonLog(this.logger, {
-                ip: req.ip,
+                ip: ip,
                 module: ResultController.name,
                 message: `[POST] Failed to Get NearbyResults`
             }, 'error')
@@ -87,10 +88,10 @@ export class ResultController {
     @ApiOkResponse({ type: FlightResult, description: "비행검사 결과 단일 조회 성공" })
     @ApiBadRequestResponse({ description: 'body 형식이 올바르지 않음' })
     @ApiNotFoundResponse({ description: "ID를 찾을 수 없음" })
-    getSpecificResult(@Req() req: Request, @Param('id') id: number, @Body('limit') limit: number, @Body('page') page: number) {
+    getSpecificResult(@RealIP() ip: string, @Param('id') id: number, @Body('limit') limit: number, @Body('page') page: number) {
 
         printWinstonLog(this.logger, {
-            ip: req.ip,
+            ip: ip,
             module: ResultController.name,
             message: `[GET] Get Single Result`
         }, 'info')
@@ -98,7 +99,7 @@ export class ResultController {
             return this.resultService.getSpecificResult(id);
         } catch (e) {
             printWinstonLog(this.logger, {
-                ip: req.ip,
+                ip: ip,
                 module: ResultController.name,
                 message: `[GET] Failed to Get Single Result`
             }, 'error')
@@ -113,9 +114,9 @@ export class ResultController {
     @ApiOkResponse({ type: Number, description: "비행검사 결과 추가 성공" })
     @ApiBadRequestResponse({ description: 'body 형식이 올바르지 않음' })
     @ApiBody({ type: [InsertFlightResultDto] })
-    AddFlightResult(@Req() req: Request, @Body() body: InsertFlightResultDto[]) {
+    AddFlightResult(@RealIP() ip: string, @Body() body: InsertFlightResultDto[]) {
         printWinstonLog(this.logger, {
-            ip: req.ip,
+            ip: ip,
             module: ResultController.name,
             message: `[POST] Add ${body.length}EA Flight Result`
         }, 'info')
@@ -123,7 +124,7 @@ export class ResultController {
             return this.resultService.addFlightResult(body);
         } catch (e) {
             printWinstonLog(this.logger, {
-                ip: req.ip,
+                ip: ip,
                 module: ResultController.name,
                 message: `[POST] Failed Add ${body.length}EA Flight Result`
             }, 'error')
@@ -136,9 +137,9 @@ export class ResultController {
     @ApiOperation({ summary: "비행검사 결과 수정", description: "비행검사 결과 수정" })
     @ApiOkResponse({ type: Number, description: "비행검사 결과 수정 성공" })
     @ApiBadRequestResponse({ description: 'body 형식이 올바르지 않음' })
-    UpdateFlightResult(@Req() req: Request, @Body() body: UpdateFlightResultDto[]) {
+    UpdateFlightResult(@RealIP() ip: string, @Body() body: UpdateFlightResultDto[]) {
         printWinstonLog(this.logger, {
-            ip: req.ip,
+            ip: ip,
             module: ResultController.name,
             message: `[PATCH] Update ${body.length}EA Flight Result`
         }, 'info')
@@ -148,7 +149,7 @@ export class ResultController {
             return this.resultService.updateFlightResult(body, testId);
         } catch (e) {
             printWinstonLog(this.logger, {
-                ip: req.ip,
+                ip: ip,
                 module: ResultController.name,
                 message: `[PATCH] Failed to Update ${body.length}EA Flight Result`
             }, 'error')
@@ -161,9 +162,9 @@ export class ResultController {
     @ApiOperation({ summary: "비행검사 결과 수정", description: "비행검사 결과 수정" })
     @ApiOkResponse({ type: Number, description: "비행검사 결과 수정 성공" })
     @ApiBadRequestResponse({ description: 'body 형식이 올바르지 않음' })
-    UpdateCoordData(@Req() req: Request, @Body() body: UpdateFlightResultDto, @Param('id') id: number) {
+    UpdateCoordData(@RealIP() ip: string, @Body() body: UpdateFlightResultDto, @Param('id') id: number) {
         printWinstonLog(this.logger, {
-            ip: req.ip,
+            ip: ip,
             module: ResultController.name,
             message: `[PATCH] Update Flight Result Point | ID : ${id}`
         }, 'info')
@@ -171,7 +172,7 @@ export class ResultController {
             return this.resultService.updateCoordData(body, id);
         } catch (e) {
             printWinstonLog(this.logger, {
-                ip: req.ip,
+                ip: ip,
                 module: ResultController.name,
                 message: `[PATCH] Failed to Update Flight Result Point | ID : ${id}`
             }, 'error')
@@ -186,9 +187,9 @@ export class ResultController {
     @ApiNotFoundResponse({ description: 'id가 존재하지 않음' })
     // @Roles(1)
     // @UseGuards(JwtAuthGuard, RolesGuard)
-    DeleteFlightResult(@Req() req: Request, @Body('id') id: number[]) {
+    DeleteFlightResult(@RealIP() ip: string, @Body('id') id: number[]) {
         printWinstonLog(this.logger, {
-            ip: req.ip,
+            ip: ip,
             module: ResultController.name,
             message: `[DELETE] Flight Result | ID : ${id}`
         }, 'info')
@@ -196,7 +197,7 @@ export class ResultController {
             return this.resultService.deleteFlightResult(id)
         } catch (e) {
             printWinstonLog(this.logger, {
-                ip: req.ip,
+                ip: ip,
                 module: ResultController.name,
                 message: `[DELETE] Failed to Delete Flight Result | ID : ${id}`
             }, 'error')

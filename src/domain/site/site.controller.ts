@@ -9,6 +9,7 @@ import { RolesGuard } from "common/auth/role.guard";
 import { Request } from "express";
 import { printWinstonLog } from "logger/logger.factory";
 import { WINSTON_MODULE_PROVIDER } from "nest-winston";
+import { RealIP } from "nestjs-real-ip";
 
 @ApiTags("표지소 API")
 @Controller("site")
@@ -25,12 +26,12 @@ export class SiteController {
     type: [Site],
     description: "표지소 조회 성공"
   })
-  getEntireSite(@Req() req: Request) {
+  getEntireSite(@RealIP() ip: string) {
 
     printWinstonLog(this.logger, {
       message: `[GET] Entire Site`,
       module: SiteController.name,
-      ip: req.ip
+      ip: ip
     }, 'info')
     try {
       return this.siteService.getEntireSite();
@@ -38,17 +39,17 @@ export class SiteController {
       printWinstonLog(this.logger, {
         message: `[GET] Failed to Get Entire Site`,
         module: SiteController.name,
-        ip: req.ip
+        ip: ip
       }, 'error')
     }
   }
 
   @Get(":id")
-  getSingleSite(@Param("id") id: number, @Req() req: Request) {
+  getSingleSite(@Param("id") id: number, @RealIP() ip: string) {
     printWinstonLog(this.logger, {
       message: `[GET] Single Site | ID : ${id}`,
       module: SiteController.name,
-      ip: req.ip
+      ip: ip
     }, 'info')
     try {
       return this.siteService.getSingleSite(id);
@@ -56,18 +57,18 @@ export class SiteController {
       printWinstonLog(this.logger, {
         message: `[GET] Failed to Get Single Site | ID : ${id}`,
         module: SiteController.name,
-        ip: req.ip
+        ip: ip
       }, 'error')
     }
   }
   @Roles(2)
   @UseGuards(RolesGuard)
   @Post()
-  addSite(@Body() body: InsertSiteDto, @Req() req: Request) {
+  addSite(@Body() body: InsertSiteDto, @RealIP() ip: string) {
     printWinstonLog(this.logger, {
       message: `[POST] Add Site ${body.siteName}`,
       module: SiteController.name,
-      ip: req.ip
+      ip: ip
     }, 'info')
     try {
       return this.siteService.addSite(body);
@@ -75,18 +76,18 @@ export class SiteController {
       printWinstonLog(this.logger, {
         message: `[POST] Failed to Add Site ${body.siteName}`,
         module: SiteController.name,
-        ip: req.ip
+        ip: ip
       }, 'error')
     }
   }
   @Roles(2)
   @UseGuards(RolesGuard)
   @Patch(":id")
-  updateSite(@Param("id") id: number, @Body() body: UpdateSiteDto, @Req() req: Request) {
+  updateSite(@Param("id") id: number, @Body() body: UpdateSiteDto, @RealIP() ip: string) {
     printWinstonLog(this.logger, {
       message: `[PATCH] Update Site ${body.siteName}`,
       module: SiteController.name,
-      ip: req.ip
+      ip: ip
     }, 'info')
     try {
       return this.siteService.updateSite(id, body);
@@ -94,18 +95,18 @@ export class SiteController {
       printWinstonLog(this.logger, {
         message: `[PATCH] Failed to Update Site ${body.siteName}`,
         module: SiteController.name,
-        ip: req.ip
+        ip: ip
       }, 'error')
     }
   }
   @Roles(3)
   @UseGuards(RolesGuard)
   @Delete(":id")
-  deleteSite(@Param("id") id: number, @Req() req: Request) {
+  deleteSite(@Param("id") id: number, @RealIP() ip: string) {
     printWinstonLog(this.logger, {
       message: `[DELETE] Site | ID : ${id}`,
       module: SiteController.name,
-      ip: req.ip
+      ip: ip
     }, 'info')
     try {
       return this.siteService.deleteSite(id);
@@ -113,7 +114,7 @@ export class SiteController {
       printWinstonLog(this.logger, {
         message: `[DELETE] Failed to Delete Site | ID : ${id}`,
         module: SiteController.name,
-        ip: req.ip
+        ip: ip
       }, 'error')
     }
   }
